@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_devarchitecture/core/constants/core_screen_texts.dart';
+import 'package:fabrika_mobile/core/constants/core_screen_texts.dart';
 import '../user_constants/user_screen_texts.dart';
 import '/core/theme/extensions.dart';
 import '../../../../widgets/inputs/date_input.dart';

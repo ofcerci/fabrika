@@ -3,54 +3,58 @@ import '../../../../core/theme/custom_colors.dart';
 import '../../../../core/widgets/base_widgets.dart';
 import '../../../../core/theme/extensions.dart';
 
-Padding buildUsedSpaceCardWidget(BuildContext context) {
+Padding buildActiveMembersCard(BuildContext context) {
   return Padding(
     padding: context.defaultPadding,
     child: buildInfoCardWithIconAndFooter(
-        context,
-        Icons.storage,
-        color: CustomColors.warning.getColor,
-        "49/50 GB",
-        "Used Space",
-        footer: "Get More Space"),
+      context,
+      Icons.people_alt_outlined,
+      color: CustomColors.primary.getColor,
+      "248",
+      "Aktif Üye",
+      footer: "Bu ay +12 yeni üye",
+    ),
   );
 }
 
-Padding buildFollowersCardWidget(BuildContext context) {
+Padding buildDailyCheckInsCard(BuildContext context) {
   return Padding(
     padding: context.defaultPadding,
     child: buildInfoCardWithIconAndFooter(
-        context,
-        Icons.person,
-        color: CustomColors.secondary.getColor,
-        "+245",
-        "Followers",
-        footer: "Just Updated"),
+      context,
+      Icons.login_outlined,
+      color: CustomColors.success.getColor,
+      "64",
+      "Bugünkü Giriş",
+      footer: "Son güncelleme: az önce",
+    ),
   );
 }
 
-Padding BuildFixedIssuesCardWidget(BuildContext context) {
+Padding buildMonthlyRevenueCard(BuildContext context) {
   return Padding(
     padding: context.defaultPadding,
     child: buildInfoCardWithIconAndFooter(
-        context,
-        Icons.warning_amber_rounded,
-        color: CustomColors.danger.getColor,
-        "75",
-        "FixedIssues",
-        footer: "Tracked From Github"),
+      context,
+      Icons.payments_outlined,
+      color: CustomColors.warning.getColor,
+      "₺47.850",
+      "Aylık Gelir",
+      footer: "Geçen aya göre +%8",
+    ),
   );
 }
 
-Padding buildRevenueCardWidget(BuildContext context) {
+Padding buildActiveLessonsCard(BuildContext context) {
   return Padding(
     padding: context.defaultPadding,
     child: buildInfoCardWithIconAndFooter(
-        context,
-        Icons.store_mall_directory,
-        color: CustomColors.success.getColor,
-        "\$34,245",
-        "Revenue",
-        footer: "Last 24 Hours"),
+      context,
+      Icons.fitness_center_outlined,
+      color: CustomColors.secondary.getColor,
+      "12",
+      "Aktif Ders",
+      footer: "3 ders bugün başlıyor",
+    ),
   );
 }

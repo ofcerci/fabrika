@@ -1,5 +1,5 @@
-import 'package:flutter_devarchitecture/core/constants/core_messages.dart';
-import 'package:flutter_devarchitecture/di/business_initializer.dart';
+import 'package:fabrika_mobile/core/constants/core_messages.dart';
+import 'package:fabrika_mobile/di/business_initializer.dart';
 
 import '../di/core_initializer.dart';
 import '../helpers/exceptions.dart';

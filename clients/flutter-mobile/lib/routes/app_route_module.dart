@@ -1,4 +1,4 @@
-import 'package:flutter_devarchitecture/core/features/admin_panel/log_f/log_page.dart';
+import 'package:fabrika_mobile/core/features/admin_panel/log_f/log_page.dart';
 
 import '../core/example_pages/theme/color_palette_page.dart';
 import '../core/example_pages/utilities/logger_page.dart';

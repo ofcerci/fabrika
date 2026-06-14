@@ -25,48 +25,42 @@ extension SelectedColorExtension on CustomColors {
         return Colors.transparent;
       case CustomColors.primary:
         return isDarkMode
-            ? Color.fromARGB(255, 133, 117, 248)
-            : Color.fromARGB(255, 91, 70, 249);
+            ? const Color(0xFFFF6B35)
+            : const Color(0xFFFF5722);
       case CustomColors.secondary:
         return isDarkMode
-            ? Color.fromARGB(255, 231, 123, 255)
-            : Color.fromARGB(255, 206, 58, 239);
+            ? const Color(0xFF64B5F6)
+            : const Color(0xFF1565C0);
       case CustomColors.success:
         return isDarkMode
-            ? Color.fromARGB(255, 110, 233, 159)
-            : Color.fromARGB(255, 42, 190, 126);
+            ? const Color(0xFF66BB6A)
+            : const Color(0xFF2E7D32);
       case CustomColors.info:
         return isDarkMode
-            ? Color.fromARGB(255, 135, 144, 250)
-            : Color.fromARGB(255, 93, 107, 252);
-
+            ? const Color(0xFF4FC3F7)
+            : const Color(0xFF0277BD);
       case CustomColors.warning:
         return isDarkMode
-            ? Color.fromARGB(255, 253, 193, 107)
-            : Color.fromARGB(255, 255, 174, 61);
-
+            ? const Color(0xFFFFCA28)
+            : const Color(0xFFF57F17);
       case CustomColors.danger:
         return isDarkMode
-            ? Color.fromARGB(255, 255, 121, 103)
-            : Color.fromARGB(255, 240, 80, 59);
+            ? const Color(0xFFEF5350)
+            : const Color(0xFFC62828);
       case CustomColors.light:
-        return isDarkMode
-            ? Color.fromARGB(255, 238, 238, 238)
-            : Color.fromARGB(255, 238, 238, 238);
+        return const Color(0xFFF5F5F5);
       case CustomColors.dark:
         return isDarkMode
-            ? Color.fromARGB(255, 255, 255, 255)
-            : Color.fromARGB(255, 9, 9, 9);
+            ? const Color(0xFFFFFFFF)
+            : const Color(0xFF0D0D0D);
       case CustomColors.gray:
         return isDarkMode
-            ? Color.fromARGB(255, 204, 204, 204)
-            : Color.fromARGB(255, 147, 150, 157);
+            ? const Color(0xFF9E9E9E)
+            : const Color(0xFF616161);
       case CustomColors.white:
-        return isDarkMode
-            ? Color.fromARGB(255, 255, 255, 255)
-            : Color.fromARGB(255, 255, 255, 255);
+        return const Color(0xFFFFFFFF);
       case CustomColors.baseDefault:
-        return Color.fromARGB(255, 255, 89, 34);
+        return const Color(0xFFFF5722);
     }
   }
 }

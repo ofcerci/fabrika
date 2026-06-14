@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_devarchitecture/core/features/admin_panel/user_claims/user_claim_constants/user_claim_screen_texts.dart';
+import 'package:fabrika_mobile/core/features/admin_panel/user_claims/user_claim_constants/user_claim_screen_texts.dart';
 import '../../../../../../core/bloc/base_state.dart';
 import '../../../../bloc/bloc_consumer_extension.dart';
 import '../../../../bloc/bloc_helper.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_devarchitecture/core/theme/extensions.dart';
+import 'package:fabrika_mobile/core/theme/extensions.dart';
 import '../../../../constants/core_screen_texts.dart';
 import '../../../../widgets/inputs/text_input.dart';
 import '../models/operation_claim_dto.dart';

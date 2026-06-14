@@ -1,6 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_devarchitecture/core/constants/core_messages.dart';
+import 'package:fabrika_mobile/core/constants/core_messages.dart';
 import '../../di/core_initializer.dart';
 import 'i_remote_config_service.dart';
 

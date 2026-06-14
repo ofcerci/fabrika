@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_devarchitecture/core/constants/core_messages.dart';
+import 'package:fabrika_mobile/core/constants/core_messages.dart';
 import '../../utilities/results.dart';
 import '../i_service.dart';
 

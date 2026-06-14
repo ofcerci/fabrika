@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Fabrika Gym — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+:root{
+  --black:#000;
+  --bg:#0A0A0A;
+  --s1:#111;
+  --s2:#181818;
+  --s3:#222;
+  --s4:#2A2A2A;
+  --b1:rgba(255,255,255,0.06);
+  --b2:rgba(255,255,255,0.10);
+  --b3:rgba(255,255,255,0.18);
+  --w:#fff;
+  --g1:rgba(255,255,255,0.85);
+  --g2:rgba(255,255,255,0.50);
+  --g3:rgba(255,255,255,0.28);
+  --g4:rgba(255,255,255,0.12);
+  --red:#FF4444;
+  --green:#3DCC7A;
+  --amber:#F5A623;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',system-ui,sans-serif;background:#050505;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:36px 12px 64px;}
+
+.pg-hd{text-align:center;margin-bottom:32px;}
+.pg-hd h1{font-size:10px;font-weight:600;letter-spacing:5px;color:var(--g3);margin-bottom:10px;}
+.pg-hd h2{font-size:26px;font-weight:700;color:var(--w);letter-spacing:-0.5px;}
+.pg-hd p{font-size:12px;color:var(--g2);margin-top:5px;}
+
+.role-bar{display:flex;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:5px;margin-bottom:32px;gap:4px;}
+.rb{padding:8px 20px;border-radius:10px;font-size:12px;font-weight:600;letter-spacing:0.3px;cursor:pointer;border:none;background:none;color:var(--g3);transition:all .2s;font-family:inherit;}
+.rb.on{background:var(--w);color:var(--black);}
+
+.wrap{display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;justify-content:center;}
+.col{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.plat{font-size:10px;font-weight:600;letter-spacing:3px;color:var(--g3);}
+
+.phone{width:375px;height:812px;position:relative;overflow:hidden;flex-shrink:0;}
+.phone.ios{background:#0A0A0A;border-radius:52px;box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 0 0 3px rgba(255,255,255,0.02),0 0 80px rgba(0,0,0,0.8),0 40px 120px rgba(0,0,0,0.6);}
+.phone.and{background:#080808;border-radius:42px;box-shadow:0 0 0 1px rgba(255,255,255,0.05),0 0 0 3px rgba(255,255,255,0.015),0 0 80px rgba(0,0,0,0.8),0 40px 120px rgba(0,0,0,0.6);}
+.hw{position:absolute;border-radius:2.5px;background:rgba(255,255,255,0.07);}
+.ios .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:32px;background:#0A0A0A;border-radius:0 0 18px 18px;z-index:99;}
+.and .punch{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:10px;height:10px;background:#080808;border-radius:50%;z-index:99;}
+.sw{position:absolute;inset:0;border-radius:inherit;overflow:hidden;}
+.root{position:relative;width:100%;height:100%;overflow:hidden;background:var(--bg);}
+
+.view{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .25s;will-change:transform,opacity;}
+.view.r{transform:translateX(100%);opacity:0;pointer-events:none;}
+.view.l{transform:translateX(-18px);opacity:0;pointer-events:none;}
+
+/* STATUS BAR */
+.ios-sb{height:44px;display:flex;align-items:flex-end;padding:0 22px 7px;flex-shrink:0;}
+.and-sb{height:26px;display:flex;align-items:center;padding:0 16px;flex-shrink:0;}
+.sb-time{font-size:15px;font-weight:600;color:var(--w);}
+.sb-icons{margin-left:auto;display:flex;gap:5px;align-items:center;color:var(--w);}
+.sb-icons i,.and-sb-icons i{font-size:13px;}
+.and-sb-time{font-size:11px;font-weight:500;color:var(--w);}
+.and-sb-icons{margin-left:auto;display:flex;gap:4px;color:var(--w);}
+
+/* NAV */
+.bnav{display:flex;padding:9px 0 22px;background:var(--s1);border-top:1px solid var(--b1);flex-shrink:0;}
+.bnav.dark{background:var(--black);}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;padding:4px 0;font-family:inherit;}
+.nb i{font-size:21px;color:var(--g3);}
+.nb span{font-size:9.5px;font-weight:600;color:var(--g3);letter-spacing:0.2px;}
+.nb.on i,.nb.on span{color:var(--w);}
+.ag{height:22px;display:flex;align-items:center;justify-content:center;background:var(--s1);flex-shrink:0;}
+.ag.dark{background:var(--black);}
+.ag div{width:100px;height:3px;background:var(--b2);border-radius:3px;}
+
+/* SCROLL */
+.sc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sc::-webkit-scrollbar{display:none;}
+.p{padding:16px 18px;}
+
+/* TOPBAR */
+.tb{padding:14px 18px 12px;flex-shrink:0;}
+.tb-t{font-size:22px;font-weight:700;color:var(--w);letter-spacing:-0.4px;}
+.tb-s{font-size:12px;color:var(--g2);margin-top:2px;}
+
+/* CARDS */
+.card{background:var(--s2);border:1px solid var(--b1);border-radius:18px;overflow:hidden;}
+.cp{padding:16px 18px;}
+
+/* SECTION LABEL */
+.sl{font-size:10px;font-weight:700;letter-spacing:1.8px;color:var(--g3);margin:18px 0 8px;}
+
+/* STAT GRID */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.sk{background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:14px;}
+.sk-v{font-size:22px;font-weight:700;color:var(--w);letter-spacing:-0.4px;margin-top:10px;}
+.sk-l{font-size:10px;color:var(--g2);margin-top:2px;}
+.sk-b{font-size:10px;font-weight:600;margin-top:7px;}
+.sk-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--s3);}
+.sk-ic i{font-size:15px;color:var(--g2);}
+
+/* DIVIDER ROWS */
+.dr{display:flex;align-items:center;gap:11px;padding:13px 18px;cursor:pointer;}
+.dr+.dr{border-top:1px solid var(--b1);}
+.dr-ic{width:34px;height:34px;border-radius:10px;background:var(--s3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dr-ic i{font-size:16px;color:var(--g2);}
+.dr-t{font-size:14px;font-weight:500;color:var(--w);}
+.dr-s{font-size:11px;color:var(--g2);margin-top:1px;}
+.dr-ch{margin-left:auto;color:var(--g3);}
+.dr-ch i{font-size:15px;}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.badge.white{background:var(--w);color:var(--black);}
+.badge.muted{background:var(--s3);color:var(--g2);border:1px solid var(--b2);}
+.badge.ok{background:rgba(61,204,122,0.12);color:#3DCC7A;border:1px solid rgba(61,204,122,0.2);}
+.badge.warn{background:rgba(245,166,35,0.12);color:#F5A623;border:1px solid rgba(245,166,35,0.2);}
+.badge.err{background:rgba(255,68,68,0.12);color:#FF6B6B;border:1px solid rgba(255,68,68,0.2);}
+
+/* LESSON ROW */
+.lr{display:flex;align-items:center;gap:10px;padding:13px 0;cursor:pointer;}
+.lr+.lr{border-top:1px solid var(--b1);}
+.lr-bar{width:2px;height:36px;border-radius:2px;background:var(--g3);flex-shrink:0;}
+.lr-n{font-size:14px;font-weight:600;color:var(--w);}
+.lr-m{font-size:11px;color:var(--g2);margin-top:2px;}
+.lr-t{margin-left:auto;font-size:14px;font-weight:700;color:var(--g1);}
+
+/* LESSON CARD */
+.lc{background:var(--s2);border:1px solid var(--b1);border-radius:16px;margin-bottom:9px;cursor:pointer;position:relative;overflow:hidden;}
+.lc-bar{position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--g3);}
+.lc-in{padding:14px 14px 14px 18px;}
+.lc-t{font-size:14px;font-weight:700;color:var(--w);}
+.lc-s{font-size:11px;color:var(--g2);margin-top:2px;}
+.lc-r{display:flex;gap:5px;margin-top:10px;align-items:center;flex-wrap:wrap;}
+.lc-time{font-size:15px;font-weight:700;color:var(--w);margin-left:auto;}
+
+/* DATE STRIP */
+.ds{display:flex;gap:5px;padding:10px 18px;overflow-x:auto;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);}
+.ds::-webkit-scrollbar{display:none;}
+.dp{display:flex;flex-direction:column;align-items:center;padding:8px 10px;border-radius:12px;min-width:44px;cursor:pointer;border:1px solid transparent;}
+.dp.on{background:var(--w);border-color:var(--w);}
+.dp .dn{font-size:16px;font-weight:700;color:var(--g2);}
+.dp .dd{font-size:9px;font-weight:600;color:var(--g3);}
+.dp.on .dn{color:var(--black);}
+.dp.on .dd{color:rgba(0,0,0,0.5);}
+
+/* MEMBER ROW */
+.mr{display:flex;align-items:center;gap:11px;padding:12px 18px;cursor:pointer;}
+.mr+.mr{border-top:1px solid var(--b1);}
+.mav{width:36px;height:36px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--g1);border:1px solid var(--b2);flex-shrink:0;}
+.mn{font-size:14px;font-weight:500;color:var(--w);}
+.ms{font-size:11px;color:var(--g2);margin-top:1px;}
+
+/* PROFILE */
+.ph{background:var(--s1);padding:24px 18px 26px;flex-shrink:0;border-bottom:1px solid var(--b1);}
+.pav{width:68px;height:68px;border-radius:50%;background:var(--s3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--w);margin-bottom:10px;}
+.pname{font-size:18px;font-weight:700;color:var(--w);}
+.pemail{font-size:12px;color:var(--g2);margin-top:2px;}
+.pst{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--b1);border-radius:14px;margin-top:18px;overflow:hidden;}
+.psi{padding:12px 0;text-align:center;}
+.psi+.psi{border-left:1px solid var(--b1);}
+.psi-v{font-size:18px;font-weight:700;color:var(--w);}
+.psi-l{font-size:9.5px;color:var(--g3);margin-top:2px;}
+
+/* QR */
+.qr-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.qr-box{width:188px;height:188px;background:var(--w);border-radius:20px;display:flex;align-items:center;justify-content:center;position:relative;}
+.qrc{position:absolute;width:22px;height:22px;}
+.qrc.tl{top:11px;left:11px;border-top:2.5px solid var(--black);border-left:2.5px solid var(--black);border-radius:3px 0 0 0;}
+.qrc.tr{top:11px;right:11px;border-top:2.5px solid var(--black);border-right:2.5px solid var(--black);border-radius:0 3px 0 0;}
+.qrc.bl{bottom:11px;left:11px;border-bottom:2.5px solid var(--black);border-left:2.5px solid var(--black);border-radius:0 0 0 3px;}
+.qrc.br{bottom:11px;right:11px;border-bottom:2.5px solid var(--black);border-right:2.5px solid var(--black);border-radius:0 0 3px 0;}
+
+/* LOGIN */
+.login-root{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.brand{text-align:center;margin-bottom:28px;}
+.brand-icon{width:60px;height:60px;border-radius:18px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.brand-icon i{font-size:28px;color:var(--w);}
+.brand-name{font-size:17px;font-weight:700;letter-spacing:5px;color:var(--w);}
+.brand-sub{font-size:9px;letter-spacing:3px;color:var(--g3);margin-top:4px;}
+.lcard{background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:22px;width:100%;}
+.lcard h3{font-size:17px;font-weight:700;color:var(--w);margin-bottom:2px;}
+.lcard p{font-size:12px;color:var(--g2);margin-bottom:18px;}
+.field{background:var(--s3);border:1px solid var(--b1);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.field i{font-size:16px;color:var(--g3);}
+.field input{background:none;border:none;outline:none;color:var(--w);font-size:14px;flex:1;font-family:inherit;}
+.field input::placeholder{color:var(--g3);}
+.role-pick{display:flex;flex-direction:column;gap:6px;margin:4px 0 14px;}
+.rp{display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:11px;cursor:pointer;border:1px solid var(--b1);background:var(--s3);transition:all .15s;}
+.rp.sel{background:var(--w);border-color:var(--w);}
+.rp-dot{width:6px;height:6px;border-radius:50%;background:var(--g3);flex-shrink:0;}
+.rp.sel .rp-dot{background:var(--black);}
+.rp-lbl{font-size:12px;font-weight:600;color:var(--g2);}
+.rp.sel .rp-lbl{color:var(--black);}
+.rp-sub{font-size:10px;color:var(--g3);margin-left:auto;}
+.rp.sel .rp-sub{color:rgba(0,0,0,0.5);}
+.cta{width:100%;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;background:var(--w);color:var(--black);transition:opacity .15s;}
+.cta:active{opacity:.85;}
+.dev{font-size:11px;color:var(--g3);text-align:center;margin-top:8px;cursor:pointer;}
+
+/* DETAIL */
+.dh{padding:16px 18px 20px;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);}
+.back{display:flex;align-items:center;gap:5px;color:var(--g2);font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;margin-bottom:14px;padding:0;font-family:inherit;}
+.d-t{font-size:21px;font-weight:700;color:var(--w);letter-spacing:-0.3px;}
+.d-s{font-size:12px;color:var(--g2);margin-top:4px;}
+.d-b{display:flex;gap:5px;margin-top:12px;}
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+.ic{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:14px;}
+.ic-v{font-size:15px;font-weight:700;color:var(--w);margin-top:6px;}
+.ic-l{font-size:10px;color:var(--g3);margin-top:2px;}
+
+/* MEMBERSHIP CARD */
+.mem-card{background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:20px;position:relative;overflow:hidden;margin-bottom:14px;}
+.mem-card::before{content:'';position:absolute;top:-60px;right:-60px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.02);}
+.mem-ttl{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--g3);margin-bottom:10px;}
+.mem-name{font-size:17px;font-weight:700;color:var(--w);}
+.mem-sub{font-size:11px;color:var(--g2);margin-top:3px;}
+.mem-badge{position:absolute;top:16px;right:16px;padding:3px 10px;border-radius:20px;background:var(--s3);border:1px solid var(--b2);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--g1);}
+.prog{height:3px;background:var(--b2);border-radius:3px;margin-top:18px;}
+.prog-f{height:3px;border-radius:3px;background:var(--w);}
+.prog-d{font-size:9px;color:var(--g3);margin-top:5px;}
+
+/* TRAINER SCHEDULE */
+.ts{background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.ts-t{font-size:13px;font-weight:700;color:var(--w);min-width:44px;}
+.ts-div{width:1px;height:36px;background:var(--b2);flex-shrink:0;}
+.ts-n{font-size:13px;font-weight:600;color:var(--w);}
+.ts-m{font-size:10px;color:var(--g2);margin-top:2px;}
+.ts-cap{margin-left:auto;font-size:12px;font-weight:600;color:var(--g2);}
+
+/* CAPACITY BAR */
+.cap-bar{height:3px;background:var(--b2);border-radius:3px;margin-top:6px;width:70px;}
+.cap-f{height:3px;border-radius:3px;}
+
+/* ADMIN ACTIVITY */
+.act-row{display:flex;align-items:center;gap:10px;padding:12px 18px;cursor:pointer;}
+.act-row+.act-row{border-top:1px solid var(--b1);}
+.act-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.act-t{font-size:13px;color:var(--g1);flex:1;}
+.act-s{font-size:11px;color:var(--g2);}
+
+/* FINANCE */
+.fin-row{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid var(--b1);}
+.fin-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:10px;}
+.fin-name{font-size:13px;color:var(--w);flex:1;}
+.fin-val{font-size:13px;font-weight:700;color:var(--w);margin-right:12px;}
+.fin-pct{font-size:11px;color:var(--g2);min-width:28px;text-align:right;}
+
+/* BTN */
+.pbtn{width:100%;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;letter-spacing:0.4px;cursor:pointer;font-family:inherit;background:var(--w);color:var(--black);}
+
+/* TOAST */
+.toast{position:absolute;bottom:86px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(20,20,20,0.96);border:1px solid var(--b2);color:var(--w);font-size:12px;font-weight:500;padding:9px 18px;border-radius:28px;opacity:0;transition:all .25s;white-space:nowrap;z-index:200;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* SEARCH BAR */
+.search{display:flex;align-items:center;gap:8px;background:var(--s3);border:1px solid var(--b1);border-radius:11px;padding:9px 13px;margin:0 18px 12px;}
+.search i{font-size:15px;color:var(--g3);}
+.search span{font-size:12px;color:var(--g3);}
+</style>
+</head>
+<body>
+
+<div class="pg-hd">
+  <h1>FABRIKA GYM</h1>
+  <h2>UI Prototype — v0.3</h2>
+  <p>Monokrom premium · 3 kullanıcı rolü · iOS & Android</p>
+</div>
+
+<div class="role-bar">
+  <button class="rb on" id="rb-admin" onclick="setRole('admin')">Admin</button>
+  <button class="rb" id="rb-trainer" onclick="setRole('trainer')">Antrenör</button>
+  <button class="rb" id="rb-member" onclick="setRole('member')">Üye</button>
+</div>
+
+<div class="wrap">
+  <div class="col">
+    <div class="plat">iOS</div>
+    <div class="phone ios">
+      <div class="hw" style="left:-2px;top:140px;width:3px;height:28px;"></div>
+      <div class="hw" style="left:-2px;top:180px;width:3px;height:28px;"></div>
+      <div class="hw" style="left:-2px;top:105px;width:3px;height:22px;"></div>
+      <div class="hw" style="right:-2px;top:158px;width:3px;height:58px;"></div>
+      <div class="notch"></div>
+      <div class="sw"><div class="root" id="I"></div></div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="plat">Android</div>
+    <div class="phone and">
+      <div class="hw" style="right:-2px;top:158px;width:3px;height:65px;"></div>
+      <div class="hw" style="right:-2px;top:240px;width:3px;height:42px;"></div>
+      <div class="punch"></div>
+      <div class="sw"><div class="root" id="A"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROLES={
+  admin:{
+    label:'Admin',sub:'Yönetici paneli',
+    tabs:[
+      {id:'dash',ic:'ti-layout-dashboard',lbl:'Pano'},
+      {id:'members',ic:'ti-users',lbl:'Üyeler'},
+      {id:'trainers',ic:'ti-barbell',lbl:'Antrenörler'},
+      {id:'finance',ic:'ti-chart-bar',lbl:'Finans'},
+      {id:'settings',ic:'ti-settings',lbl:'Ayarlar'},
+    ]
+  },
+  trainer:{
+    label:'Antrenör',sub:'Antrenör paneli',
+    tabs:[
+      {id:'schedule',ic:'ti-calendar',lbl:'Program'},
+      {id:'mymembers',ic:'ti-users',lbl:'Üyelerim'},
+      {id:'checkin',ic:'ti-scan',lbl:'Yoklama'},
+      {id:'tprofile',ic:'ti-user',lbl:'Profil'},
+    ]
+  },
+  member:{
+    label:'Üye',sub:'Üye uygulaması',
+    tabs:[
+      {id:'home',ic:'ti-home',lbl:'Ana sayfa'},
+      {id:'classes',ic:'ti-calendar',lbl:'Dersler'},
+      {id:'qr',ic:'ti-qrcode',lbl:'QR Giriş'},
+      {id:'mprofile',ic:'ti-user',lbl:'Profil'},
+    ]
+  }
+};
+
+const LESSONS=[
+  {n:'Sabah Fitness',tr:'Ahmet Yılmaz',t:'08:00',loc:'Salon A',type:'Fitness',dur:'60 dk',cap:12,max:15,desc:'Başlangıç ve orta seviye için sabah enerjisi odaklı tam vücut antrenmanı.'},
+  {n:'Yoga',tr:'Zeynep Kaya',t:'10:00',loc:'Salon B',type:'Yoga',dur:'45 dk',cap:8,max:10,desc:'Nefes teknikleri ve esneme hareketleri odaklı başlangıç yoga seansı.'},
+  {n:'Pilates',tr:'Selin Arslan',t:'12:00',loc:'Salon D',type:'Pilates',dur:'50 dk',cap:5,max:8,desc:'Core güçlendirme ve postür düzeltmeye odaklı modern pilates seansı.'},
+  {n:'Kickboks',tr:'Murat Demir',t:'18:00',loc:'Salon C',type:'Kickboks',dur:'90 dk',cap:6,max:12,desc:'Yoğun kardiyo ve teknik vuruş çalışmaları içeren ileri seviye ders.'},
+  {n:'Zumba',tr:'Ayşe Çelik',t:'20:00',loc:'Salon A',type:'Zumba',dur:'60 dk',cap:9,max:15,desc:'Eğlenceli Latin ritimli dans fitness — tüm seviyeler için uygundur.'},
+];
+
+const MEMBERS=[
+  {n:'Mehmet Çelik',p:'Yıllık',s:'Aktif',i:'MC',streak:5,last:'bugün 08:15'},
+  {n:'Seda Yıldız',p:'Aylık',s:'Aktif',i:'SY',streak:3,last:'bugün 09:30'},
+  {n:'Kerem Arslan',p:'3 Aylık',s:'Aktif',i:'KA',streak:7,last:'dün 18:00'},
+  {n:'Fatma Öz',p:'Yıllık',s:'Doldu',i:'FÖ',streak:0,last:'2 hafta önce'},
+  {n:'Ali Vural',p:'Aylık',s:'Aktif',i:'AV',streak:2,last:'bugün 07:45'},
+  {n:'Elif Şahin',p:'3 Aylık',s:'Aktif',i:'EŞ',streak:4,last:'dün 20:00'},
+  {n:'Berk Yılmaz',p:'Yıllık',s:'Aktif',i:'BY',streak:1,last:'bugün 10:00'},
+];
+
+const TRAINERS=[
+  {n:'Ahmet Yılmaz',sp:'Fitness & CrossFit',lessons:3,members:22,i:'AY',active:true},
+  {n:'Zeynep Kaya',sp:'Yoga & Meditasyon',lessons:2,members:14,i:'ZK',active:true},
+  {n:'Murat Demir',sp:'Kickboks & Dövüş',lessons:2,members:18,i:'MD',active:true},
+  {n:'Selin Arslan',sp:'Pilates & Esneklik',lessons:2,members:11,i:'SA',active:false},
+];
+
+let CUR_ROLE='admin';
+
+function build(rootId, isIOS){
+  const root=document.getElementById(rootId);
+  const P=rootId;
+
+  function statusBar(){
+    if(isIOS) return `<div class="ios-sb"><div class="sb-time">9:41</div><div class="sb-icons"><i class="ti ti-signal-4g"></i><i class="ti ti-wifi"></i><i class="ti ti-battery-3"></i></div></div>`;
+    return `<div class="and-sb"><div class="and-sb-time">09:41</div><div class="and-sb-icons"><i class="ti ti-wifi"></i><i class="ti ti-signal-4g"></i><i class="ti ti-battery-3"></i></div></div>`;
+  }
+  function navBar(active,tabs,dark){
+    const dc=dark?'dark':'';
+    return `<div class="bnav ${dc}">${tabs.map(t=>`<button class="nb ${active===t.id?'on':''}" onclick="W['${P}_nav']('${t.id}')"><i class="ti ${t.ic}"></i><span>${t.lbl}</span></button>`).join('')}</div>${isIOS?'':`<div class="ag ${dc}"><div></div></div>`}`;
+  }
+
+  // LOGIN
+  root.innerHTML+=`<div class="view" id="${P}-login">
+    ${statusBar()}
+    <div class="login-root">
+      <div class="brand">
+        <div class="brand-icon"><i class="ti ti-barbell"></i></div>
+        <div class="brand-name">FABRİKA</div>
+        <div class="brand-sub">GYM MANAGEMENT</div>
+      </div>
+      <div class="lcard">
+        <h3>Giriş Yap</h3>
+        <p>Hesap türünü seçin</p>
+        <div class="field"><i class="ti ti-mail"></i><input type="email" placeholder="E-posta" value="admin@fabrika.com"/></div>
+        <div class="field"><i class="ti ti-lock"></i><input type="password" placeholder="Şifre" value="••••••••"/></div>
+        <div class="sl">HESAP TÜRÜ</div>
+        <div class="role-pick">
+          <div class="rp sel" id="${P}-rp-admin" onclick="W['${P}_selrole']('admin')"><div class="rp-dot"></div><div class="rp-lbl">Admin</div><div class="rp-sub">Yönetici</div></div>
+          <div class="rp" id="${P}-rp-trainer" onclick="W['${P}_selrole']('trainer')"><div class="rp-dot"></div><div class="rp-lbl">Antrenör</div><div class="rp-sub">Eğitmen</div></div>
+          <div class="rp" id="${P}-rp-member" onclick="W['${P}_selrole']('member')"><div class="rp-dot"></div><div class="rp-lbl">Üye</div><div class="rp-sub">Sporcu</div></div>
+        </div>
+        <button class="cta" onclick="W['${P}_login']()">GİRİŞ YAP</button>
+        <div class="dev" onclick="W['${P}_login']()">Seçilen rolle hızlı giriş →</div>
+      </div>
+    </div>
+  </div>`;
+
+  // ─── ADMIN VIEWS ───────────────────────────────
+
+  // DASH
+  root.innerHTML+=`<div class="view r" id="${P}-dash">
+    ${statusBar()}
+    <div class="tb">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="font-size:11px;color:var(--g2);" id="${P}-greet">Günaydın</div><div class="tb-t">Fabrika Gym</div></div>
+        <div style="display:flex;gap:9px;align-items:center;">
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i></div>
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;">AK</div>
+        </div>
+      </div>
+    </div>
+    <div class="sc p">
+      <div class="sg">
+        <div class="sk"><div class="sk-ic"><i class="ti ti-users"></i></div><div class="sk-v">248</div><div class="sk-l">Aktif üye</div><div class="sk-b" style="color:var(--green);"><i class="ti ti-trending-up" style="font-size:10px;"></i> +12 bu ay</div></div>
+        <div class="sk"><div class="sk-ic"><i class="ti ti-login"></i></div><div class="sk-v">64</div><div class="sk-l">Bugün giriş</div><div class="sk-b" style="color:var(--g2);">Son: 09:42</div></div>
+        <div class="sk"><div class="sk-ic"><i class="ti ti-cash"></i></div><div class="sk-v">₺47.8K</div><div class="sk-l">Aylık gelir</div><div class="sk-b" style="color:var(--green);"><i class="ti ti-trending-up" style="font-size:10px;"></i> +8%</div></div>
+        <div class="sk"><div class="sk-ic"><i class="ti ti-alert-circle"></i></div><div class="sk-v">7</div><div class="sk-l">Süresi dolan</div><div class="sk-b" style="color:var(--amber);">Bu hafta</div></div>
+      </div>
+      <div class="sl">SON AKTİVİTE</div>
+      <div class="card">
+        <div class="act-row"><div class="act-dot" style="background:var(--green);"></div><div class="act-t">Mehmet Çelik üyeliğini yeniledi</div><div class="act-s">2 dk</div></div>
+        <div class="act-row"><div class="act-dot" style="background:var(--g2);"></div><div class="act-t">Sabah Fitness dersine 12 kişi katıldı</div><div class="act-s">1 sa</div></div>
+        <div class="act-row"><div class="act-dot" style="background:var(--amber);"></div><div class="act-t">Fatma Öz üyeliği süresi doldu</div><div class="act-s">3 sa</div></div>
+        <div class="act-row"><div class="act-dot" style="background:var(--g2);"></div><div class="act-t">Yeni üye kaydı: Berk Yılmaz</div><div class="act-s">5 sa</div></div>
+        <div class="act-row"><div class="act-dot" style="background:var(--green);"></div><div class="act-t">Aylık gelir hedefine ulaşıldı</div><div class="act-s">dün</div></div>
+      </div>
+      <div class="sl">BUGÜNKÜ PROGRAM</div>
+      <div class="card"><div style="padding:2px 18px;">
+        ${LESSONS.slice(0,3).map(l=>`<div class="lr" onclick="W['${P}_det'](${JSON.stringify(l).replace(/"/g,'&quot;')})">
+          <div class="lr-bar"></div>
+          <div style="flex:1;"><div class="lr-n">${l.n}</div><div class="lr-m">${l.tr} • ${l.loc} • ${l.cap}/${l.max}</div></div>
+          <div class="lr-t">${l.t}</div>
+        </div>`).join('')}
+      </div></div>
+      <div style="height:10px;"></div>
+    </div>
+    <div id="${P}-dash-nav"></div>
+  </div>`;
+
+  // MEMBERS (admin)
+  root.innerHTML+=`<div class="view r" id="${P}-members">
+    ${statusBar()}
+    <div class="tb"><div class="tb-t">Üyeler</div><div class="tb-s">248 aktif üye</div></div>
+    <div class="search"><i class="ti ti-search"></i><span>Üye ara...</span></div>
+    <div style="display:flex;gap:5px;padding:0 18px 10px;flex-wrap:wrap;">
+      <span class="badge white">Tümü 248</span>
+      <span class="badge muted">Aktif</span>
+      <span class="badge muted">Süresi Dolmuş</span>
+      <span class="badge muted">Dondurulmuş</span>
+    </div>
+    <div class="sc">
+      <div class="card" style="margin:0 18px 18px;">
+        ${MEMBERS.map(m=>`<div class="mr" onclick="W['${P}_toast']('${m.n} profili açıldı')">
+          <div class="mav">${m.i}</div>
+          <div style="flex:1;"><div class="mn">${m.n}</div><div class="ms">${m.p} • Son: ${m.last}</div></div>
+          <span class="badge ${m.s==='Aktif'?'ok':'err'}">${m.s}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div id="${P}-members-nav"></div>
+  </div>`;
+
+  // TRAINERS (admin)
+  root.innerHTML+=`<div class="view r" id="${P}-trainers">
+    ${statusBar()}
+    <div class="tb"><div class="tb-t">Antrenörler</div><div class="tb-s">4 antrenör</div></div>
+    <div class="sc p">
+      ${TRAINERS.map(t=>`<div class="card" style="margin-bottom:9px;cursor:pointer;" onclick="W['${P}_toast']('${t.n} profili açıldı')">
+        <div class="cp" style="display:flex;align-items:center;gap:12px;">
+          <div style="width:42px;height:42px;border-radius:50%;background:var(--s3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g1);">${t.i}</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:600;color:var(--w);">${t.n}</div>
+            <div style="font-size:11px;color:var(--g2);margin-top:2px;">${t.sp}</div>
+            <div style="display:flex;gap:12px;margin-top:7px;">
+              <span style="font-size:11px;color:var(--g2);"><b style="color:var(--w);">${t.lessons}</b> ders/gün</span>
+              <span style="font-size:11px;color:var(--g2);"><b style="color:var(--w);">${t.members}</b> üye</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <span class="badge ${t.active?'ok':'muted'}">${t.active?'Aktif':'İzinli'}</span>
+            <i class="ti ti-chevron-right" style="font-size:15px;color:var(--g3);"></i>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div id="${P}-trainers-nav"></div>
+  </div>`;
+
+  // FINANCE (admin)
+  root.innerHTML+=`<div class="view r" id="${P}-finance">
+    ${statusBar()}
+    <div class="tb"><div class="tb-t">Finans</div><div class="tb-s">Haziran 2026</div></div>
+    <div class="sc p">
+      <div class="card cp" style="margin-bottom:12px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--g3);margin-bottom:12px;">TOPLAM GELİR</div>
+        <div style="font-size:32px;font-weight:700;color:var(--w);letter-spacing:-1px;">₺47.850</div>
+        <div style="font-size:12px;color:var(--green);margin-top:4px;"><i class="ti ti-trending-up" style="font-size:12px;"></i> Geçen aya göre +%8 artış</div>
+        <div style="display:flex;gap:16px;margin-top:16px;border-top:1px solid var(--b1);padding-top:14px;">
+          <div><div style="font-size:16px;font-weight:700;color:var(--w);">₺38.200</div><div style="font-size:10px;color:var(--g3);margin-top:2px;">Tahsil edildi</div></div>
+          <div style="width:1px;background:var(--b1);"></div>
+          <div><div style="font-size:16px;font-weight:700;color:var(--amber);">₺9.650</div><div style="font-size:10px;color:var(--g3);margin-top:2px;">Beklemede</div></div>
+        </div>
+      </div>
+      <div class="sl">PAKET DAĞILIMI</div>
+      <div class="card cp">
+        ${[['Yıllık Paket','₺28.400','60%'],['3 Aylık Paket','₺11.200','24%'],['Aylık Paket','₺8.250','16%']].map(r=>`<div class="fin-row">
+          <div class="fin-dot" style="background:var(--g1);"></div>
+          <div class="fin-name">${r[0]}</div>
+          <div class="fin-val">${r[1]}</div>
+          <div class="fin-pct">${r[2]}</div>
+        </div>`).join('')}
+      </div>
+      <div class="sl">SON İŞLEMLER</div>
+      <div class="card">
+        ${[['Mehmet Çelik','Yıllık yenileme','₺2.400','bugün'],['Seda Yıldız','Aylık yenileme','₺350','dün'],['Berk Yılmaz','Yeni kayıt','₺2.400','dün'],['Ali Vural','Aylık yenileme','₺350','2 gün önce']].map(r=>`<div class="dr" onclick="W['${P}_toast']('İşlem detayı')">
+          <div class="dr-ic"><i class="ti ti-credit-card"></i></div>
+          <div><div class="dr-t">${r[0]}</div><div class="dr-s">${r[1]}</div></div>
+          <div style="margin-left:auto;text-align:right;"><div style="font-size:13px;font-weight:700;color:var(--w);">${r[2]}</div><div style="font-size:10px;color:var(--g2);margin-top:1px;">${r[3]}</div></div>
+        </div>`).join('')}
+      </div>
+      <div style="height:10px;"></div>
+    </div>
+    <div id="${P}-finance-nav"></div>
+  </div>`;
+
+  // SETTINGS (admin)
+  root.innerHTML+=`<div class="view r" id="${P}-settings">
+    ${statusBar()}
+    <div class="tb"><div class="tb-t">Ayarlar</div></div>
+    <div class="sc p">
+      <div class="sl">GYM</div>
+      <div class="card" style="margin-bottom:12px;">
+        ${[['Gym bilgileri','ti-building'],['Paket yönetimi','ti-package'],['Salon düzeni','ti-layout']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div class="dr-t">${r[0]}</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+      </div>
+      <div class="sl">UYGULAMA</div>
+      <div class="card" style="margin-bottom:12px;">
+        ${[['Bildirimler','ti-bell'],['Yedekleme','ti-database'],['Güvenlik','ti-shield']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div class="dr-t">${r[0]}</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+      </div>
+      <div class="card" style="background:rgba(255,68,68,0.04);border-color:rgba(255,68,68,0.12);cursor:pointer;" onclick="W['${P}_goto']('login')">
+        <div class="dr"><div class="dr-ic" style="background:rgba(255,68,68,0.08);"><i class="ti ti-logout" style="color:var(--red);"></i></div><div class="dr-t" style="color:var(--red);">Çıkış Yap</div></div>
+      </div>
+    </div>
+    <div id="${P}-settings-nav"></div>
+  </div>`;
+
+  // ─── TRAINER VIEWS ───────────────────────────────
+
+  // SCHEDULE
+  root.innerHTML+=`<div class="view r" id="${P}-schedule">
+    ${statusBar()}
+    <div class="tb">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div><div class="tb-t">Program</div><div class="tb-s">14 Haziran, Cumartesi</div></div>
+        <div style="display:flex;gap:9px;align-items:center;">
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);">AY</div>
+        </div>
+      </div>
+    </div>
+    <div class="ds">
+      ${['9 Sal','10 Çar','11 Per','12 Cum','13 Cmt','14 Paz','15 Pzt'].map((d,i)=>{const[n,dy]=d.split(' ');return`<div class="dp ${i===4?'on':''}" onclick="selDate(this)"><div class="dn">${n}</div><div class="dd">${dy}</div></div>`}).join('')}
+    </div>
+    <div class="sc p">
+      <div class="sl">BUGÜNKÜ DERSLERİM</div>
+      ${LESSONS.slice(0,3).map(l=>`<div class="ts" onclick="W['${P}_det'](${JSON.stringify(l).replace(/"/g,'&quot;')})">
+        <div class="ts-t">${l.t}</div>
+        <div class="ts-div"></div>
+        <div style="flex:1;">
+          <div class="ts-n">${l.n}</div>
+          <div class="ts-m">${l.loc}</div>
+          <div class="cap-bar"><div class="cap-f" style="width:${Math.round(l.cap/l.max*100)}%;background:${l.cap/l.max>0.8?'var(--amber)':'var(--w)'};"></div></div>
+        </div>
+        <div style="text-align:right;"><div class="ts-cap">${l.cap}/${l.max}</div><span class="badge ${l.cap>=l.max?'warn':'muted'}" style="margin-top:4px;">${l.cap>=l.max?'Dolu':'Açık'}</span></div>
+      </div>`).join('')}
+      <div class="sl">NOTLAR</div>
+      <div class="card cp">
+        <div style="font-size:13px;color:var(--g1);line-height:1.7;">Bugün 18:00 Kickboks dersinde ekipman kontrolü yapılacak. Salon C'ye 15 dk erken gelin.</div>
+      </div>
+      <div style="height:10px;"></div>
+    </div>
+    <div id="${P}-schedule-nav"></div>
+  </div>`;
+
+  // MY MEMBERS (trainer)
+  root.innerHTML+=`<div class="view r" id="${P}-mymembers">
+    ${statusBar()}
+    <div class="tb"><div class="tb-t">Üyelerim</div><div class="tb-s">22 atanmış üye</div></div>
+    <div class="search"><i class="ti ti-search"></i><span>Üye ara...</span></div>
+    <div class="sc">
+      <div class="card" style="margin:0 18px 18px;">
+        ${MEMBERS.map(m=>`<div class="mr" onclick="W['${P}_toast']('${m.n} profili açıldı')">
+          <div class="mav">${m.i}</div>
+          <div style="flex:1;"><div class="mn">${m.n}</div><div class="ms">Son: ${m.last}</div></div>
+          <div style="text-align:right;">
+            ${m.streak>0?`<div style="font-size:11px;font-weight:600;color:var(--g1);"><i class="ti ti-flame" style="font-size:11px;"></i> ${m.streak} gün</div>`:''}
+            <span class="badge ${m.s==='Aktif'?'ok':'err'}" style="margin-top:3px;">${m.s}</span>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div id="${P}-mymembers-nav"></div>
+  </div>`;
+
+  // CHECK-IN (trainer)
+  root.innerHTML+=`<div class="view r" id="${P}-checkin">
+    ${statusBar()}
+    <div class="sc"><div class="qr-wrap">
+      <div style="font-size:20px;font-weight:700;color:var(--w);margin-bottom:5px;text-align:center;">Yoklama Al</div>
+      <div style="font-size:12px;color:var(--g2);text-align:center;line-height:1.7;margin-bottom:24px;">Üyenin QR kodunu okutarak<br>yoklamasını alın</div>
+      <div class="qr-box">
+        <div class="qrc tl"></div><div class="qrc tr"></div><div class="qrc bl"></div><div class="qrc br"></div>
+        <svg width="126" height="126" viewBox="0 0 120 120">
+          <rect x="10" y="10" width="30" height="30" rx="4" fill="#111"/><rect x="15" y="15" width="20" height="20" rx="2" fill="#fff"/><rect x="18" y="18" width="14" height="14" rx="1" fill="#111"/>
+          <rect x="80" y="10" width="30" height="30" rx="4" fill="#111"/><rect x="85" y="15" width="20" height="20" rx="2" fill="#fff"/><rect x="88" y="18" width="14" height="14" rx="1" fill="#111"/>
+          <rect x="10" y="80" width="30" height="30" rx="4" fill="#111"/><rect x="15" y="85" width="20" height="20" rx="2" fill="#fff"/><rect x="18" y="88" width="14" height="14" rx="1" fill="#111"/>
+          <rect x="50" y="12" width="5" height="5" fill="#111"/><rect x="58" y="12" width="5" height="5" fill="#111"/><rect x="50" y="20" width="5" height="5" fill="#111"/>
+          <rect x="50" y="52" width="5" height="5" fill="#444"/><rect x="58" y="52" width="5" height="5" fill="#444"/><rect x="66" y="52" width="5" height="5" fill="#111"/>
+          <rect x="50" y="60" width="5" height="5" fill="#111"/><rect x="58" y="60" width="5" height="5" fill="#444"/><rect x="66" y="60" width="5" height="5" fill="#111"/>
+          <rect x="50" y="68" width="5" height="5" fill="#111"/><rect x="58" y="68" width="5" height="5" fill="#111"/><rect x="66" y="68" width="5" height="5" fill="#444"/>
+          <rect x="76" y="52" width="5" height="5" fill="#111"/><rect x="84" y="52" width="5" height="5" fill="#111"/>
+          <rect x="76" y="60" width="5" height="5" fill="#444"/><rect x="84" y="68" width="5" height="5" fill="#444"/>
+        </svg>
+      </div>
+      <div style="font-size:14px;font-weight:600;color:var(--g1);margin-top:20px;">Ahmet Yılmaz</div>
+      <div style="font-size:11px;color:var(--g2);margin-top:3px;">Baş Antrenör</div>
+      <button class="pbtn" style="margin-top:24px;max-width:220px;" onclick="W['${P}_toast']('Yoklama alındı!')">Manuel Yoklama</button>
+      <div style="font-size:10px;color:var(--g3);margin-top:10px;">veya QR kodu tarat</div>
+      <div class="sl" style="align-self:stretch;">SON YOKLAMALAR</div>
+      <div class="card" style="width:100%;">
+        ${MEMBERS.slice(0,3).map(m=>`<div class="mr"><div class="mav">${m.i}</div><div style="flex:1;"><div class="mn">${m.n}</div><div class="ms">${m.last}</div></div><span class="badge ok">Girdi</span></div>`).join('')}
+      </div>
+    </div></div>
+    <div id="${P}-checkin-nav"></div>
+  </div>`;
+
+  // TRAINER PROFILE
+  root.innerHTML+=`<div class="view r" id="${P}-tprofile">
+    ${statusBar()}
+    <div class="sc">
+      <div class="ph">
+        <div class="pav">AY</div>
+        <div class="pname">Ahmet Yılmaz</div>
+        <div class="pemail">ahmet@fabrika.com</div>
+        <div class="pst">
+          <div class="psi"><div class="psi-v">3</div><div class="psi-l">Ders/gün</div></div>
+          <div class="psi"><div class="psi-v">22</div><div class="psi-l">Üyem</div></div>
+          <div class="psi"><div class="psi-v">4.9</div><div class="psi-l">Puan</div></div>
+        </div>
+      </div>
+      <div style="padding:0 18px;">
+        <div class="sl">UZMANLIK</div>
+        <div class="card cp" style="margin-bottom:12px;">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            ${['Fitness','CrossFit','Fonksiyonel','HIIT','Kalistenik'].map(s=>`<span class="badge muted">${s}</span>`).join('')}
+          </div>
+        </div>
+        <div class="sl">HESAP</div>
+        <div class="card" style="margin-bottom:12px;">
+          ${[['Ders geçmişi','ti-history'],['Değerlendirmeler','ti-star'],['Bildirimler','ti-bell']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div class="dr-t">${r[0]}</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+        </div>
+        <div class="card" style="background:rgba(255,68,68,0.04);border-color:rgba(255,68,68,0.12);cursor:pointer;" onclick="W['${P}_goto']('login')">
+          <div class="dr"><div class="dr-ic" style="background:rgba(255,68,68,0.08);"><i class="ti ti-logout" style="color:var(--red);"></i></div><div class="dr-t" style="color:var(--red);">Çıkış Yap</div></div>
+        </div>
+        <div style="height:14px;"></div>
+      </div>
+    </div>
+    <div id="${P}-tprofile-nav"></div>
+  </div>`;
+
+  // ─── MEMBER VIEWS ───────────────────────────────
+
+  // HOME
+  root.innerHTML+=`<div class="view r" id="${P}-home">
+    ${statusBar()}
+    <div class="tb">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="font-size:11px;color:var(--g2);" id="${P}-mgreet">Günaydın</div><div class="tb-t">Fabrika Gym</div></div>
+        <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;">MC</div>
+      </div>
+    </div>
+    <div class="sc p">
+      <div class="mem-card">
+        <div class="mem-ttl">ÜYELİK KARTI</div>
+        <div class="mem-badge">AKTİF</div>
+        <div class="mem-name">Mehmet Çelik</div>
+        <div class="mem-sub">Yıllık Paket • 245 gün kaldı</div>
+        <div class="prog"><div class="prog-f" style="width:33%;"></div></div>
+        <div class="prog-d">120 / 365 gün kullanıldı</div>
+      </div>
+      <div class="sg">
+        <div class="sk"><div class="sk-ic"><i class="ti ti-flame"></i></div><div class="sk-v">5</div><div class="sk-l">Üst üste gün</div><div class="sk-b" style="color:var(--w);">Kişisel rekor</div></div>
+        <div class="sk"><div class="sk-ic"><i class="ti ti-calendar-check"></i></div><div class="sk-v">23</div><div class="sk-l">Bu ayki seans</div><div class="sk-b" style="color:var(--green);"><i class="ti ti-trending-up" style="font-size:10px;"></i> +3</div></div>
+      </div>
+      <div class="sl">BUGÜNKÜ DERSLER</div>
+      <div class="card"><div style="padding:2px 18px;">
+        ${LESSONS.slice(0,3).map(l=>`<div class="lr" onclick="W['${P}_det'](${JSON.stringify(l).replace(/"/g,'&quot;')})">
+          <div class="lr-bar"></div>
+          <div style="flex:1;"><div class="lr-n">${l.n}</div><div class="lr-m">${l.tr.split(' ')[0]} • ${l.loc} • ${l.cap}/${l.max}</div></div>
+          <div class="lr-t">${l.t}</div>
+        </div>`).join('')}
+      </div></div>
+      <div class="sl">SONRAKI DERS</div>
+      <div class="card cp" style="display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="W['${P}_toast']('Ders detayı açıldı')">
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:var(--w);">Sabah Fitness</div>
+          <div style="font-size:11px;color:var(--g2);margin-top:3px;">Yarın • 08:00 • Ahmet Yılmaz</div>
+        </div>
+        <span class="badge white">Rezerve</span>
+      </div>
+      <div style="height:10px;"></div>
+    </div>
+    <div id="${P}-home-nav"></div>
+  </div>`;
+
+  // CLASSES (member)
+  root.innerHTML+=`<div class="view r" id="${P}-classes">
+    ${statusBar()}
+    <div class="tb"><div class="tb-t">Dersler</div><div class="tb-s">Haziran 2026</div></div>
+    <div class="ds">
+      ${['9 Sal','10 Çar','11 Per','12 Cum','13 Cmt','14 Paz','15 Pzt'].map((d,i)=>{const[n,dy]=d.split(' ');return`<div class="dp ${i===4?'on':''}" onclick="selDate(this)"><div class="dn">${n}</div><div class="dd">${dy}</div></div>`}).join('')}
+    </div>
+    <div class="sc p">
+      ${LESSONS.map(l=>`<div class="lc" onclick="W['${P}_det'](${JSON.stringify(l).replace(/"/g,'&quot;')})">
+        <div class="lc-bar"></div>
+        <div class="lc-in">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+            <div><div class="lc-t">${l.n}</div><div class="lc-s"><i class="ti ti-user" style="font-size:10px;"></i> ${l.tr}</div></div>
+            <div class="lc-time">${l.t}</div>
+          </div>
+          <div class="lc-r">
+            <span class="badge muted">${l.type}</span>
+            <span class="badge muted">${l.dur}</span>
+            <span class="badge muted">${l.loc}</span>
+            <span style="margin-left:auto;font-size:10px;color:var(--g2);">${l.cap}/${l.max}</span>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div id="${P}-classes-nav"></div>
+  </div>`;
+
+  // QR (member)
+  root.innerHTML+=`<div class="view r" id="${P}-qr">
+    ${statusBar()}
+    <div class="sc"><div class="qr-wrap">
+      <div style="font-size:20px;font-weight:700;color:var(--w);margin-bottom:5px;text-align:center;">Gym Girişi</div>
+      <div style="font-size:12px;color:var(--g2);text-align:center;line-height:1.7;margin-bottom:24px;">QR kodunuzu okutarak<br>gym'e giriş yapın</div>
+      <div class="qr-box">
+        <div class="qrc tl"></div><div class="qrc tr"></div><div class="qrc bl"></div><div class="qrc br"></div>
+        <svg width="126" height="126" viewBox="0 0 120 120">
+          <rect x="10" y="10" width="30" height="30" rx="4" fill="#111"/><rect x="15" y="15" width="20" height="20" rx="2" fill="#fff"/><rect x="18" y="18" width="14" height="14" rx="1" fill="#111"/>
+          <rect x="80" y="10" width="30" height="30" rx="4" fill="#111"/><rect x="85" y="15" width="20" height="20" rx="2" fill="#fff"/><rect x="88" y="18" width="14" height="14" rx="1" fill="#111"/>
+          <rect x="10" y="80" width="30" height="30" rx="4" fill="#111"/><rect x="15" y="85" width="20" height="20" rx="2" fill="#fff"/><rect x="18" y="88" width="14" height="14" rx="1" fill="#111"/>
+          <rect x="50" y="12" width="5" height="5" fill="#111"/><rect x="58" y="12" width="5" height="5" fill="#111"/><rect x="50" y="20" width="5" height="5" fill="#111"/>
+          <rect x="50" y="52" width="5" height="5" fill="#333"/><rect x="58" y="52" width="5" height="5" fill="#333"/><rect x="66" y="52" width="5" height="5" fill="#111"/>
+          <rect x="50" y="60" width="5" height="5" fill="#111"/><rect x="58" y="60" width="5" height="5" fill="#333"/><rect x="66" y="60" width="5" height="5" fill="#111"/>
+          <rect x="50" y="68" width="5" height="5" fill="#111"/><rect x="58" y="68" width="5" height="5" fill="#111"/><rect x="66" y="68" width="5" height="5" fill="#333"/>
+          <rect x="76" y="52" width="5" height="5" fill="#111"/><rect x="84" y="52" width="5" height="5" fill="#111"/>
+          <rect x="76" y="60" width="5" height="5" fill="#333"/><rect x="84" y="68" width="5" height="5" fill="#333"/>
+        </svg>
+      </div>
+      <div style="font-size:15px;font-weight:600;color:var(--g1);margin-top:20px;">Mehmet Çelik</div>
+      <div style="font-size:11px;color:var(--g2);margin-top:3px;">Yıllık Paket • Aktif</div>
+      <button class="pbtn" style="margin-top:24px;max-width:220px;" onclick="W['${P}_toast']('Giriş başarılı!')">Manuel Giriş Yap</button>
+      <div style="font-size:10px;color:var(--g3);margin-top:10px;">veya QR kodu okutun</div>
+    </div></div>
+    <div id="${P}-qr-nav"></div>
+  </div>`;
+
+  // MEMBER PROFILE
+  root.innerHTML+=`<div class="view r" id="${P}-mprofile">
+    ${statusBar()}
+    <div class="sc">
+      <div class="ph">
+        <div class="pav">MC</div>
+        <div class="pname">Mehmet Çelik</div>
+        <div class="pemail">mehmet@gmail.com</div>
+        <div class="pst">
+          <div class="psi"><div class="psi-v">120</div><div class="psi-l">Antrenman</div></div>
+          <div class="psi"><div class="psi-v">245</div><div class="psi-l">Gün kaldı</div></div>
+          <div class="psi"><div class="psi-v">48</div><div class="psi-l">Ders</div></div>
+        </div>
+      </div>
+      <div style="padding:0 18px;">
+        <div class="sl">ÜYELİK</div>
+        <div class="card" style="margin-bottom:12px;">
+          ${[['Paket bilgisi','ti-credit-card','Yıllık Paket'],['Ödeme geçmişi','ti-receipt','Son: ₺2.400'],['Devam geçmişi','ti-calendar-stats','%76 devam']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div><div class="dr-t">${r[0]}</div><div class="dr-s">${r[2]}</div></div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+        </div>
+        <div class="sl">AYARLAR</div>
+        <div class="card" style="margin-bottom:12px;">
+          ${[['Bildirimler','ti-bell'],['Şifre değiştir','ti-lock']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div class="dr-t">${r[0]}</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+        </div>
+        <div class="card" style="background:rgba(255,68,68,0.04);border-color:rgba(255,68,68,0.12);cursor:pointer;" onclick="W['${P}_goto']('login')">
+          <div class="dr"><div class="dr-ic" style="background:rgba(255,68,68,0.08);"><i class="ti ti-logout" style="color:var(--red);"></i></div><div class="dr-t" style="color:var(--red);">Çıkış Yap</div></div>
+        </div>
+        <div style="height:14px;"></div>
+      </div>
+    </div>
+    <div id="${P}-mprofile-nav"></div>
+  </div>`;
+
+  // DETAIL (shared)
+  root.innerHTML+=`<div class="view r" id="${P}-detail">
+    ${statusBar()}
+    <div class="dh">
+      <button class="back" onclick="W['${P}_back']()"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div class="d-t" id="${P}-dt"></div>
+      <div class="d-s" id="${P}-ds"></div>
+      <div class="d-b" id="${P}-db"></div>
+    </div>
+    <div class="sc p">
+      <div class="igrid">
+        <div class="ic"><i class="ti ti-clock" style="font-size:18px;color:var(--g2);"></i><div class="ic-v" id="${P}-di-t"></div><div class="ic-l">Başlangıç</div></div>
+        <div class="ic"><i class="ti ti-map-pin" style="font-size:18px;color:var(--g2);"></i><div class="ic-v" id="${P}-di-l"></div><div class="ic-l">Konum</div></div>
+        <div class="ic"><i class="ti ti-users" style="font-size:18px;color:var(--g2);"></i><div class="ic-v" id="${P}-di-c"></div><div class="ic-l">Kapasite</div></div>
+        <div class="ic"><i class="ti ti-star" style="font-size:18px;color:var(--g2);"></i><div class="ic-v">4.8</div><div class="ic-l">Puan</div></div>
+      </div>
+      <div class="sl">AÇIKLAMA</div>
+      <div class="card cp" style="margin-bottom:16px;"><p id="${P}-di-d" style="font-size:13px;color:var(--g1);line-height:1.7;"></p></div>
+      <button class="pbtn" onclick="W['${P}_toast']('Rezervasyon oluşturuldu!')">Rezervasyon Yap</button>
+      <div style="height:14px;"></div>
+    </div>
+  </div>`;
+
+  root.innerHTML+=`<div class="toast" id="${P}-toast"></div>`;
+
+  // ─── STATE & METHODS ───────────────────────────────
+  let loginRole='admin', prev=null;
+
+  W[`${P}_selrole`]=function(r){
+    loginRole=r;
+    ['admin','trainer','member'].forEach(x=>{
+      document.getElementById(`${P}-rp-${x}`).className='rp'+(r===x?' sel':'');
+    });
+    setRole(r);
+  };
+
+  W[`${P}_login`]=function(){
+    const h=new Date().getHours();
+    const g=h<12?'Günaydın':h<18?'İyi günler':'İyi akşamlar';
+    const el=document.getElementById(`${P}-greet`)||document.getElementById(`${P}-mgreet`);
+    if(el) el.textContent=g;
+    const firstTab=ROLES[loginRole].tabs[0].id;
+    injectAllNavs(loginRole);
+    W[`${P}_goto`](firstTab);
+  };
+
+  W[`${P}_goto`]=function(id){
+    root.querySelectorAll('.view').forEach(v=>{
+      if(!v.classList.contains('r')&&v.id!==`${P}-${id}`){
+        v.classList.add('l');
+        setTimeout(()=>{v.classList.remove('l');v.classList.add('r');},290);
+      }
+    });
+    const t=document.getElementById(`${P}-${id}`);
+    if(t) t.classList.remove('r','l');
+  };
+
+  W[`${P}_nav`]=function(id){prev=null;W[`${P}_goto`](id);};
+  W[`${P}_back`]=function(){W[`${P}_goto`](prev||ROLES[loginRole].tabs[0].id);prev=null;};
+
+  W[`${P}_det`]=function(l){
+    if(typeof l==='string') l=JSON.parse(l);
+    prev=loginRole==='member'?'classes':loginRole==='trainer'?'schedule':'dash';
+    document.getElementById(`${P}-dt`).textContent=l.n;
+    document.getElementById(`${P}-ds`).innerHTML=`<i class="ti ti-user" style="font-size:11px;"></i> ${l.tr}`;
+    document.getElementById(`${P}-db`).innerHTML=`<span class="badge muted">${l.type}</span><span class="badge muted">${l.dur}</span>`;
+    document.getElementById(`${P}-di-t`).textContent=l.t;
+    document.getElementById(`${P}-di-l`).textContent=l.loc;
+    document.getElementById(`${P}-di-c`).textContent=`${l.cap}/${l.max}`;
+    document.getElementById(`${P}-di-d`).textContent=l.desc;
+    W[`${P}_goto`]('detail');
+  };
+
+  W[`${P}_toast`]=function(msg){
+    const t=document.getElementById(`${P}-toast`);
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2200);
+  };
+
+  function injectAllNavs(role){
+    const tabs=ROLES[role].tabs;
+    tabs.forEach(tab=>{
+      const slot=document.getElementById(`${P}-${tab.id}-nav`);
+      if(slot) slot.innerHTML=navBar(tab.id,tabs,false);
+    });
+  }
+  W[`${P}_injectNavs`]=injectAllNavs;
+}
+
+function selDate(el){
+  el.closest('.ds').querySelectorAll('.dp').forEach(d=>d.classList.remove('on'));
+  el.classList.add('on');
+}
+
+const W={};
+build('I',true);
+build('A',false);
+
+let activeRole='admin';
+function setRole(r){
+  activeRole=r;
+  document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));
+  document.getElementById(`rb-${r}`).classList.add('on');
+  // sync login panel
+  ['I','A'].forEach(P=>{
+    W[`${P}_selrole`]&&W[`${P}_selrole`](r);
+  });
+}
+
+// init
+setRole('admin');
+</script>
+</body>
+</html>

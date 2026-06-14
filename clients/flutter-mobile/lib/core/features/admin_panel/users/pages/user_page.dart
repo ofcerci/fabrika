@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_devarchitecture/core/constants/core_screen_texts.dart';
-import 'package:flutter_devarchitecture/core/features/admin_panel/users/user_constants/user_messages.dart';
+import 'package:fabrika_mobile/core/constants/core_screen_texts.dart';
+import 'package:fabrika_mobile/core/features/admin_panel/users/user_constants/user_messages.dart';
 import '../../../../bloc/base_state.dart';
 import '../../../../bloc/bloc_consumer_extension.dart';
 import '../../../../bloc/bloc_helper.dart';

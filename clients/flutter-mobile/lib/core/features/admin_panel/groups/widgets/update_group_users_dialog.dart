@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_devarchitecture/core/constants/core_screen_texts.dart';
+import 'package:fabrika_mobile/core/constants/core_screen_texts.dart';
 import '../../../../constants/core_messages.dart';
 import '../group_constants/group_screen_texts.dart';
 import '/core/di/core_initializer.dart';

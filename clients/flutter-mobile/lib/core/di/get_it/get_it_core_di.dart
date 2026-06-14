@@ -1,6 +1,6 @@
 import 'package:dart_amqp/dart_amqp.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_devarchitecture/core/widgets/tables/data_table/data_table_2.dart';
+import 'package:fabrika_mobile/core/widgets/tables/data_table/data_table_2.dart';
 import '../../key_value_storage/shared_pref/shared_preferences.dart';
 import '/core/utilities/file_share/i_share.dart';
 import '/core/utilities/logger/i_logger.dart';

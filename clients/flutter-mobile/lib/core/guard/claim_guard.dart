@@ -1,4 +1,4 @@
-import 'package:flutter_devarchitecture/di/business_initializer.dart';
+import 'package:fabrika_mobile/di/business_initializer.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import '../../core/di/core_initializer.dart';
 import '../../routes/routes_constants.dart';

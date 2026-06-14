@@ -30,10 +30,10 @@ class HomePageTablet extends StatelessWidget {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: buildUsedSpaceCardWidget(context),
+                                  child: buildActiveMembersCard(context),
                                 ),
                                 Expanded(
-                                  child: buildRevenueCardWidget(context),
+                                  child: buildMonthlyRevenueCard(context),
                                 ),
                               ],
                             ),
@@ -44,11 +44,11 @@ class HomePageTablet extends StatelessWidget {
                               children: [
                                 Expanded(
                                   flex: 25,
-                                  child: BuildFixedIssuesCardWidget(context),
+                                  child: buildDailyCheckInsCard(context),
                                 ),
                                 Expanded(
                                   flex: 25,
-                                  child: buildFollowersCardWidget(context),
+                                  child: buildActiveLessonsCard(context),
                                 ),
                               ],
                             ),

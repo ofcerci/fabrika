@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_devarchitecture/core/constants/core_screen_texts.dart';
+import 'package:fabrika_mobile/core/constants/core_screen_texts.dart';
 import '../../../../extensions/claimed_widget.dart';
 import '../operation_claims_constants/operation_claim_messages.dart';
 import '../operation_claims_constants/operation_claims_screen_texts.dart';

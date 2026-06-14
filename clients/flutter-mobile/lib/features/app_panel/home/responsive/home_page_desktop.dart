@@ -71,16 +71,16 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: buildUsedSpaceCardWidget(context),
+                                  child: buildActiveMembersCard(context),
                                 ),
                                 Expanded(
-                                  child: buildRevenueCardWidget(context),
+                                  child: buildMonthlyRevenueCard(context),
                                 ),
                                 Expanded(
-                                  child: BuildFixedIssuesCardWidget(context),
+                                  child: buildDailyCheckInsCard(context),
                                 ),
                                 Expanded(
-                                  child: buildFollowersCardWidget(context),
+                                  child: buildActiveLessonsCard(context),
                                 ),
                               ],
                             ),
