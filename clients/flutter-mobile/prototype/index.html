@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8"/>
@@ -220,7 +220,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#050505;min-height:100v
 .dev{font-size:11px;color:var(--g3);text-align:center;margin-top:8px;cursor:pointer;}
 
 /* DETAIL */
-.dh{padding:16px 18px 20px;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);}
+.dh{padding:16px 18px 20px;flex-shrink:0;background:var(--bg);}
 .back{display:flex;align-items:center;gap:5px;color:var(--g2);font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;margin-bottom:14px;padding:0;font-family:inherit;}
 .d-t{font-size:21px;font-weight:700;color:var(--w);letter-spacing:-0.3px;}
 .d-s{font-size:12px;color:var(--g2);margin-top:4px;}
@@ -326,7 +326,6 @@ const ROLES={
       {id:'members',ic:'ti-users',lbl:'Üyeler'},
       {id:'trainers',ic:'ti-barbell',lbl:'Antrenörler'},
       {id:'finance',ic:'ti-chart-bar',lbl:'Finans'},
-      {id:'settings',ic:'ti-settings',lbl:'Ayarlar'},
     ]
   },
   trainer:{
@@ -481,7 +480,7 @@ function build(rootId, isIOS){
         <div><div style="font-size:11px;color:var(--g2);" id="${P}-greet">Günaydın</div><div class="tb-t">Fabrika Gym</div></div>
         <div style="display:flex;gap:9px;align-items:center;">
           <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;" onclick="W['${P}_goto']('notifications')"><i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i><div style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);"></div></div>
-          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;">AK</div>
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;" onclick="W['${P}_goto']('settings')">AK</div>
         </div>
       </div>
     </div>
@@ -491,14 +490,6 @@ function build(rootId, isIOS){
         <div class="sk"><div class="sk-ic"><i class="ti ti-login"></i></div><div class="sk-v">64</div><div class="sk-l">Bugün giriş</div><div class="sk-b" style="color:var(--g2);">Son: 09:42</div></div>
         <div class="sk"><div class="sk-ic"><i class="ti ti-cash"></i></div><div class="sk-v">₺47.8K</div><div class="sk-l">Aylık gelir</div><div class="sk-b" style="color:var(--green);"><i class="ti ti-trending-up" style="font-size:10px;"></i> +8%</div></div>
         <div class="sk"><div class="sk-ic"><i class="ti ti-alert-circle"></i></div><div class="sk-v">7</div><div class="sk-l">Süresi dolan</div><div class="sk-b" style="color:var(--amber);">Bu hafta</div></div>
-      </div>
-      <div class="sl">SON AKTİVİTE</div>
-      <div class="card">
-        <div class="act-row"><div class="act-dot" style="background:var(--green);"></div><div class="act-t">Mehmet Çelik üyeliğini yeniledi</div><div class="act-s">2 dk</div></div>
-        <div class="act-row"><div class="act-dot" style="background:var(--g2);"></div><div class="act-t">Sabah Fitness dersine 12 kişi katıldı</div><div class="act-s">1 sa</div></div>
-        <div class="act-row"><div class="act-dot" style="background:var(--amber);"></div><div class="act-t">Fatma Öz üyeliği süresi doldu</div><div class="act-s">3 sa</div></div>
-        <div class="act-row"><div class="act-dot" style="background:var(--g2);"></div><div class="act-t">Yeni üye kaydı: Berk Yılmaz</div><div class="act-s">5 sa</div></div>
-        <div class="act-row"><div class="act-dot" style="background:var(--green);"></div><div class="act-t">Aylık gelir hedefine ulaşıldı</div><div class="act-s">dün</div></div>
       </div>
       <div class="sl">BUGÜNKÜ PROGRAM</div>
       <div class="card"><div style="padding:2px 18px;">
@@ -513,20 +504,43 @@ function build(rootId, isIOS){
     <div id="${P}-dash-nav"></div>
   </div>`;
 
+  function adminHeader(title,sub){
+    return`${statusBar()}
+    <div class="tb">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div><div style="font-size:11px;color:var(--g2);" id="${P}-greet-${title}">İyi akşamlar</div><div class="tb-t">Fabrika Gym</div></div>
+        <div style="display:flex;gap:9px;align-items:center;">
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;" onclick="W['${P}_goto']('notifications')"><i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i><div style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);"></div></div>
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;" onclick="W['${P}_goto']('settings')">AK</div>
+        </div>
+      </div>
+      <div style="font-size:18px;font-weight:700;color:var(--w);">${title}</div>
+      ${sub?`<div class="tb-s">${sub}</div>`:''}
+    </div>`;
+  }
+
   // MEMBERS (admin)
   root.innerHTML+=`<div class="view r" id="${P}-members">
     ${statusBar()}
-    <div class="tb"><div class="tb-t">Üyeler</div><div class="tb-s">248 aktif üye</div></div>
-    <div class="search"><i class="ti ti-search"></i><span>Üye ara...</span></div>
-    <div style="display:flex;gap:5px;padding:0 18px 10px;flex-wrap:wrap;">
-      <span class="badge white">Tümü 248</span>
-      <span class="badge muted">Aktif</span>
-      <span class="badge muted">Süresi Dolmuş</span>
-      <span class="badge muted">Dondurulmuş</span>
+    <div class="dh">
+      <button class="back" onclick="W['${P}_goto']('dash')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <div><div class="tb-t">Üyeler</div><div class="tb-s">248 aktif üye</div></div>
+      </div>
+    </div>
+    <div class="search" style="margin:0 18px 8px;" onclick="this.querySelector('input').focus()">
+      <i class="ti ti-search"></i>
+      <input id="${P}-admin-mem-search" type="text" placeholder="Üye ara..." style="background:none;border:none;outline:none;flex:1;color:var(--w);font-size:13px;" oninput="W['${P}_adminMemFilter']()">
+    </div>
+    <div style="display:flex;gap:5px;padding:0 18px 10px;flex-wrap:wrap;" id="${P}-admin-mem-tabs">
+      <span class="badge white" data-filter="all" onclick="W['${P}_adminMemTab'](this,'all')">Tümü ${MEMBERS.length}</span>
+      <span class="badge muted" data-filter="Aktif" onclick="W['${P}_adminMemTab'](this,'Aktif')">Aktif</span>
+      <span class="badge muted" data-filter="Süresi Dolmuş" onclick="W['${P}_adminMemTab'](this,'Süresi Dolmuş')">Süresi Dolmuş</span>
+      <span class="badge muted" data-filter="Dondurulmuş" onclick="W['${P}_adminMemTab'](this,'Dondurulmuş')">Dondurulmuş</span>
     </div>
     <div class="sc">
-      <div class="card" style="margin:0 18px 18px;">
-        ${MEMBERS.map(m=>`<div class="mr" onclick="W['${P}_toast']('${m.n} profili açıldı')">
+      <div class="card" style="margin:0 18px 18px;" id="${P}-admin-mem-list">
+        ${MEMBERS.map((m,mi)=>`<div class="mr" data-name="${m.n.toLowerCase()}" data-status="${m.s}" onclick="W['${P}_openMember'](${mi})">
           <div class="mav">${m.i}</div>
           <div style="flex:1;"><div class="mn">${m.n}</div><div class="ms">${m.p} • Son: ${m.last}</div></div>
           <span class="badge ${m.s==='Aktif'?'ok':'err'}">${m.s}</span>
@@ -539,9 +553,12 @@ function build(rootId, isIOS){
   // TRAINERS (admin)
   root.innerHTML+=`<div class="view r" id="${P}-trainers">
     ${statusBar()}
-    <div class="tb"><div class="tb-t">Antrenörler</div><div class="tb-s">4 antrenör</div></div>
+    <div class="dh">
+      <button class="back" onclick="W['${P}_goto']('dash')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="margin-top:4px;"><div class="tb-t">Antrenörler</div><div class="tb-s">4 antrenör</div></div>
+    </div>
     <div class="sc p">
-      ${TRAINERS.map(t=>`<div class="card" style="margin-bottom:9px;cursor:pointer;" onclick="W['${P}_toast']('${t.n} profili açıldı')">
+      ${TRAINERS.map((t,ti)=>`<div class="card" style="margin-bottom:9px;cursor:pointer;" onclick="W['${P}_openTrainer'](${ti})">
         <div class="cp" style="display:flex;align-items:center;gap:12px;">
           <div style="width:42px;height:42px;border-radius:50%;background:var(--s3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g1);">${t.i}</div>
           <div style="flex:1;">
@@ -562,10 +579,49 @@ function build(rootId, isIOS){
     <div id="${P}-trainers-nav"></div>
   </div>`;
 
+  // TRAINER DETAIL (admin)
+  root.innerHTML+=`<div class="view r" id="${P}-trainer-detail">
+    ${statusBar()}
+    <div class="dh">
+      <button class="back" onclick="W['${P}_goto']('trainers')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:8px;">
+        <div id="${P}-td-av" style="width:52px;height:52px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--w);flex-shrink:0;"></div>
+        <div>
+          <div id="${P}-td-name" style="font-size:18px;font-weight:700;color:var(--w);"></div>
+          <div id="${P}-td-sp" style="font-size:12px;color:var(--g2);margin-top:2px;"></div>
+        </div>
+        <div id="${P}-td-badge" style="margin-left:auto;"></div>
+      </div>
+    </div>
+    <div class="sc p">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div class="card" style="text-align:center;padding:14px 8px;">
+          <div id="${P}-td-lessons" style="font-size:22px;font-weight:700;color:var(--w);"></div>
+          <div style="font-size:10px;color:var(--g3);margin-top:3px;">Ders / Gün</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px 8px;">
+          <div id="${P}-td-members" style="font-size:22px;font-weight:700;color:var(--w);"></div>
+          <div style="font-size:10px;color:var(--g3);margin-top:3px;">Aktif Üye</div>
+        </div>
+      </div>
+      <div class="sl">ÜYELERİ</div>
+      <div class="card" style="margin-bottom:16px;" id="${P}-td-member-list"></div>
+      <div class="sl">İŞLEMLER</div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="dr" onclick="W['${P}_toast']('Program düzenleme açıldı')"><div class="dr-ic"><i class="ti ti-calendar"></i></div><div class="dr-t">Program Düzenle</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+        <div class="dr" onclick="W['${P}_toast']('İzin talebi açıldı')"><div class="dr-ic"><i class="ti ti-beach"></i></div><div class="dr-t">İzin Yönetimi</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+        <div class="dr" onclick="W['${P}_toast']('Mesaj gönderildi')"><div class="dr-ic"><i class="ti ti-message"></i></div><div class="dr-t">Mesaj Gönder</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+      </div>
+    </div>
+  </div>`;
+
   // FINANCE (admin)
   root.innerHTML+=`<div class="view r" id="${P}-finance">
     ${statusBar()}
-    <div class="tb"><div class="tb-t">Finans</div><div class="tb-s">Haziran 2026</div></div>
+    <div class="dh">
+      <button class="back" onclick="W['${P}_goto']('dash')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="margin-top:4px;"><div class="tb-t">Finans</div><div class="tb-s">Haziran 2026</div></div>
+    </div>
     <div class="sc p">
       <div class="card cp" style="margin-bottom:12px;">
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--g3);margin-bottom:12px;">TOPLAM GELİR</div>
@@ -602,7 +658,10 @@ function build(rootId, isIOS){
   // SETTINGS (admin)
   root.innerHTML+=`<div class="view r" id="${P}-settings">
     ${statusBar()}
-    <div class="tb"><div class="tb-t">Ayarlar</div></div>
+    <div class="tb">
+      <button class="back" onclick="W['${P}_goto']('dash')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div class="tb-t" style="margin-top:4px;">Ayarlar</div>
+    </div>
     <div class="sc p">
       <div class="sl">GYM</div>
       <div class="card" style="margin-bottom:12px;">
@@ -725,7 +784,7 @@ function build(rootId, isIOS){
   root.innerHTML+=`<div class="view r" id="${P}-member-detail">
     ${statusBar()}
     <div class="dh">
-      <button class="back" onclick="W['${P}_goto']('mymembers')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <button class="back" onclick="W['${P}_backMemberDetail']()"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
       <div style="display:flex;align-items:center;gap:12px;margin-top:8px;">
         <div id="${P}-md-av" style="width:52px;height:52px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--w);flex-shrink:0;"></div>
         <div>
@@ -798,11 +857,13 @@ function build(rootId, isIOS){
           })()}
         </svg>
       </div>
-      <div class="sl">İŞLEMLER</div>
-      <div class="card" style="margin-bottom:12px;">
-        <div class="dr" onclick="W['${P}_toast']('Diyet planı atama açıldı')"><div class="dr-ic"><i class="ti ti-salad"></i></div><div class="dr-t">Diyet Planı Ata</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
-        <div class="dr" onclick="W['${P}_toast']('Antrenman programı açıldı')"><div class="dr-ic"><i class="ti ti-barbell"></i></div><div class="dr-t">Antrenman Programı Düzenle</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
-        <div class="dr" onclick="W['${P}_openChatFromMember']()"><div class="dr-ic"><i class="ti ti-message"></i></div><div class="dr-t">Mesaj Gönder</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+      <div id="${P}-md-actions-wrap">
+        <div class="sl">İŞLEMLER</div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="dr" onclick="W['${P}_toast']('Diyet planı atama açıldı')"><div class="dr-ic"><i class="ti ti-salad"></i></div><div class="dr-t">Diyet Planı Ata</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+          <div class="dr" onclick="W['${P}_toast']('Antrenman programı açıldı')"><div class="dr-ic"><i class="ti ti-barbell"></i></div><div class="dr-t">Antrenman Programı Düzenle</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+          <div class="dr" onclick="W['${P}_openChatFromMember']()"><div class="dr-ic"><i class="ti ti-message"></i></div><div class="dr-t">Mesaj Gönder</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+        </div>
       </div>
     </div>
   </div>`;
@@ -1763,6 +1824,23 @@ function build(rootId, isIOS){
     W[`${P}_goto`](ROLES[r].tabs[0].id);
   };
 
+  let _adminMemActiveFilter='all';
+  W[`${P}_adminMemTab`]=function(el,filter){
+    _adminMemActiveFilter=filter;
+    document.querySelectorAll(`#${P}-admin-mem-tabs .badge`).forEach(b=>{
+      b.className='badge '+(b.dataset.filter===filter?'white':'muted');
+    });
+    W[`${P}_adminMemFilter`]();
+  };
+  W[`${P}_adminMemFilter`]=function(){
+    const q=(document.getElementById(`${P}-admin-mem-search`).value||'').toLowerCase().trim();
+    document.querySelectorAll(`#${P}-admin-mem-list .mr`).forEach(row=>{
+      const nameMatch=!q||row.dataset.name.includes(q);
+      const statusMatch=_adminMemActiveFilter==='all'||row.dataset.status===_adminMemActiveFilter;
+      row.style.display=(nameMatch&&statusMatch)?'flex':'none';
+    });
+  };
+
   W[`${P}_goto`]=function(id){
     root.querySelectorAll('.view').forEach(v=>{
       if(!v.classList.contains('r')&&v.id!==`${P}-${id}`){
@@ -1849,7 +1927,7 @@ function build(rootId, isIOS){
   };
 
   W[`${P}_backProgress`]=function(){
-    W[`${P}_goto`](loginRole==='trainer'?'member-detail':'mprofile');
+    W[`${P}_goto`](loginRole==='member'?'mprofile':'member-detail');
   };
   W[`${P}_openProgress`]=function(){
     const btn=document.getElementById(`${P}-add-meas-btn`);
@@ -1958,6 +2036,28 @@ function build(rootId, isIOS){
     NOTIFS.forEach((_,i)=>W[`${P}_readNotif`](i));
   };
 
+  W[`${P}_openTrainer`]=function(idx){
+    const t=TRAINERS[idx];
+    document.getElementById(`${P}-td-av`).textContent=t.i;
+    document.getElementById(`${P}-td-name`).textContent=t.n;
+    document.getElementById(`${P}-td-sp`).textContent=t.sp;
+    document.getElementById(`${P}-td-badge`).innerHTML=`<span class="badge ${t.active?'ok':'muted'}">${t.active?'Aktif':'İzinli'}</span>`;
+    document.getElementById(`${P}-td-lessons`).textContent=t.lessons;
+    document.getElementById(`${P}-td-members`).textContent=t.members;
+    const trainerMembers=MEMBERS.slice(0,t.members>MEMBERS.length?MEMBERS.length:Math.min(t.members,MEMBERS.length));
+    document.getElementById(`${P}-td-member-list`).innerHTML=trainerMembers.map((m,mi)=>`
+      <div class="mr" onclick="W['${P}_openMember'](${mi})">
+        <div class="mav">${m.i}</div>
+        <div style="flex:1;"><div class="mn">${m.n}</div><div class="ms">${m.p} • ${m.last}</div></div>
+        <span class="badge ${m.s==='Aktif'?'ok':'err'}">${m.s}</span>
+      </div>`).join('');
+    W[`${P}_goto`]('trainer-detail');
+  };
+
+  W[`${P}_backMemberDetail`]=function(){
+    W[`${P}_goto`](loginRole==='admin'?'members':loginRole==='trainer'?'mymembers':'mprofile');
+  };
+
   W[`${P}_openMember`]=function(idx){
     const m=MEMBERS[idx];
     document.getElementById(`${P}-md-av`).textContent=m.i;
@@ -1974,6 +2074,8 @@ function build(rootId, isIOS){
     const notesEl=document.getElementById(`${P}-md-notes`);
     notesEl.textContent=m.notes||'Not eklenmemiş.';
     notesEl.style.color=m.notes?'var(--g1)':'var(--g3)';
+    const actWrap=document.getElementById(`${P}-md-actions-wrap`);
+    if(actWrap) actWrap.style.display=loginRole==='admin'?'none':'block';
     W[`${P}_goto`]('member-detail');
   };
 
