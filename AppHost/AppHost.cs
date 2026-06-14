@@ -6,13 +6,13 @@ var env = builder.Environment.EnvironmentName;
 var api = builder.AddProject<Projects.WebAPI>("webapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", env);
 
-builder.AddNpmApp("angular-admin", "../clients/angular-admin", "dev")
+builder.AddViteApp("angular-admin", "../clients/angular-admin")
     .WithReference(api)
     .WaitFor(api)
     .WithHttpEndpoint(port: 4200, env: "PORT")
     .WithExternalHttpEndpoints();
 
-builder.AddNpmApp("vue-portal", "../clients/vue-portal", "dev")
+builder.AddViteApp("vue-portal", "../clients/vue-portal")
     .WithReference(api)
     .WaitFor(api)
     .WithHttpEndpoint(port: 5173, env: "PORT")
