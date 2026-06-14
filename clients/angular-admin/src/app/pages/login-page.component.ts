@@ -18,7 +18,10 @@ import { toLanguageOptions, type LanguageOption } from "../core/language-display
   imports: [CommonModule, ReactiveFormsModule, CardModule, InputTextModule, PasswordModule, ButtonModule],
   template: `
     <div class="centered-page">
-      <p-card [header]="translate('login.title', 'DevArchitecture Login')" [subheader]="translate('login.subtitle', 'PrimeNG admin client')">
+      <p-card [subheader]="translate('login.subtitle', 'Spor Salonu Yönetim Sistemi')">
+        <div style="text-align:center;margin-bottom:1.5rem">
+          <img src="/logo.svg" alt="Fabrika" height="44" />
+        </div>
         <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
           <input pInputText type="email" [placeholder]="translate('login.email', 'Email')" formControlName="email" />
           <p-password [feedback]="false" [placeholder]="translate('login.password', 'Password')" formControlName="password"></p-password>

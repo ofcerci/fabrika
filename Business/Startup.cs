@@ -171,6 +171,15 @@ namespace Business
             services.AddTransient<IGroupClaimRepository, GroupClaimRepository>();
             services.AddTransient<IUserGroupRepository, UserGroupRepository>();
 
+            services.AddTransient<IMemberRepository, MemberRepository>();
+            services.AddTransient<IPackageRepository, PackageRepository>();
+            services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddTransient<ITrainerRepository, TrainerRepository>();
+            services.AddTransient<ILessonRepository, LessonRepository>();
+            services.AddTransient<IReservationRepository, ReservationRepository>();
+            services.AddTransient<IAttendanceRepository, AttendanceRepository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
+
             services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
             services.AddSingleton<MongoDbContextBase, MongoDbContext>();
         }
@@ -192,6 +201,16 @@ namespace Business
             services.AddTransient<IGroupRepository, GroupRepository>();
             services.AddTransient<IGroupClaimRepository, GroupClaimRepository>();
             services.AddTransient<IUserGroupRepository, UserGroupRepository>();
+
+            services.AddTransient<IMemberRepository, MemberRepository>();
+            services.AddTransient<IPackageRepository, PackageRepository>();
+            services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddTransient<ITrainerRepository, TrainerRepository>();
+            services.AddTransient<ILessonRepository, LessonRepository>();
+            services.AddTransient<IReservationRepository, ReservationRepository>();
+            services.AddTransient<IAttendanceRepository, AttendanceRepository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
+
             services.AddDbContext<ProjectDbContext>();
 
             services.AddSingleton<MongoDbContextBase, MongoDbContext>();
@@ -214,6 +233,14 @@ namespace Business
             services.AddTransient<IGroupRepository, GroupRepository>();
             services.AddTransient<IGroupClaimRepository, GroupClaimRepository>();
 
+            services.AddTransient<IMemberRepository, MemberRepository>();
+            services.AddTransient<IPackageRepository, PackageRepository>();
+            services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddTransient<ITrainerRepository, TrainerRepository>();
+            services.AddTransient<ILessonRepository, LessonRepository>();
+            services.AddTransient<IReservationRepository, ReservationRepository>();
+            services.AddTransient<IAttendanceRepository, AttendanceRepository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
 
             services.AddDbContext<ProjectDbContext>();
 

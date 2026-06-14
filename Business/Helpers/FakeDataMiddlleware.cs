@@ -1,5 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Business.Fakes.Handlers.Attendances;
 using Business.Fakes.Handlers.Languages;
+using Business.Fakes.Handlers.Lessons;
+using Business.Fakes.Handlers.Members;
+using Business.Fakes.Handlers.Packages;
+using Business.Fakes.Handlers.Payments;
+using Business.Fakes.Handlers.Reservations;
+using Business.Fakes.Handlers.Subscriptions;
+using Business.Fakes.Handlers.Trainers;
 using Business.Fakes.Handlers.Translates;
 using Business.Handlers.Groups.Commands;
 using Core.Utilities.IoC;
@@ -915,6 +924,60 @@ namespace Business.Helpers
             await mediator.Send(new CreateTranslateInternalCommand { LangId = 1, Code = "MobilePhones", Value = "Cep Telefonları" });
             await mediator.Send(new CreateTranslateInternalCommand { LangId = 2, Code = "MobilePhones", Value = "Mobile Phones" });
             
+            // ── Gym Seed Data ──────────────────────────────────────────────
+
+            // Packages
+            await mediator.Send(new CreatePackageInternalCommand { Name = "Aylık Üyelik", Description = "30 günlük standart üyelik paketi", DurationDays = 30, Price = 750 });
+            await mediator.Send(new CreatePackageInternalCommand { Name = "3 Aylık Üyelik", Description = "90 günlük indirimli üyelik paketi", DurationDays = 90, Price = 1950 });
+            await mediator.Send(new CreatePackageInternalCommand { Name = "Yıllık Üyelik", Description = "365 günlük yıllık üyelik paketi", DurationDays = 365, Price = 6500 });
+            await mediator.Send(new CreatePackageInternalCommand { Name = "Öğrenci Paketi", Description = "Öğrencilere özel aylık indirimli paket", DurationDays = 30, Price = 500 });
+
+            // Trainers
+            await mediator.Send(new CreateTrainerInternalCommand { FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet.yilmaz@fabrika.com", Phone = "05301234567", Specialization = "Fitness & Kuvvet Antrenmanı", Notes = "7 yıl deneyimli" });
+            await mediator.Send(new CreateTrainerInternalCommand { FirstName = "Zeynep", LastName = "Kaya", Email = "zeynep.kaya@fabrika.com", Phone = "05302345678", Specialization = "Yoga & Pilates", Notes = "Sertifikalı yoga eğitmeni" });
+            await mediator.Send(new CreateTrainerInternalCommand { FirstName = "Murat", LastName = "Demir", Email = "murat.demir@fabrika.com", Phone = "05303456789", Specialization = "Kickboks & Muay Thai", Notes = "Ulusal şampiyon" });
+
+            // Members
+            await mediator.Send(new CreateMemberInternalCommand { FirstName = "Ali", LastName = "Çelik", Email = "ali.celik@gmail.com", Phone = "05311111111", BirthDate = new DateTime(1990, 5, 15), Gender = 1, Address = "Kadıköy, İstanbul", Notes = "Düzenli katılım" });
+            await mediator.Send(new CreateMemberInternalCommand { FirstName = "Ayşe", LastName = "Şahin", Email = "ayse.sahin@gmail.com", Phone = "05322222222", BirthDate = new DateTime(1995, 8, 22), Gender = 0, Address = "Beşiktaş, İstanbul" });
+            await mediator.Send(new CreateMemberInternalCommand { FirstName = "Mehmet", LastName = "Arslan", Email = "mehmet.arslan@gmail.com", Phone = "05333333333", BirthDate = new DateTime(1988, 3, 10), Gender = 1, Address = "Ümraniye, İstanbul" });
+            await mediator.Send(new CreateMemberInternalCommand { FirstName = "Fatma", LastName = "Koç", Email = "fatma.koc@gmail.com", Phone = "05344444444", BirthDate = new DateTime(2000, 11, 30), Gender = 0, Address = "Şişli, İstanbul", Notes = "Öğrenci" });
+            await mediator.Send(new CreateMemberInternalCommand { FirstName = "Emre", LastName = "Öztürk", Email = "emre.ozturk@gmail.com", Phone = "05355555555", BirthDate = new DateTime(1993, 7, 4), Gender = 1, Address = "Maltepe, İstanbul" });
+
+            // Subscriptions (MemberId 1-5, PackageId 1-4, DurationDays must match package)
+            var today = DateTime.Today;
+            await mediator.Send(new CreateSubscriptionInternalCommand { MemberId = 1, PackageId = 2, StartDate = today.AddDays(-45), DurationDays = 90, PricePaid = 1950 });
+            await mediator.Send(new CreateSubscriptionInternalCommand { MemberId = 2, PackageId = 1, StartDate = today.AddDays(-10), DurationDays = 30, PricePaid = 750 });
+            await mediator.Send(new CreateSubscriptionInternalCommand { MemberId = 3, PackageId = 3, StartDate = today.AddDays(-60), DurationDays = 365, PricePaid = 6500 });
+            await mediator.Send(new CreateSubscriptionInternalCommand { MemberId = 4, PackageId = 4, StartDate = today.AddDays(-5), DurationDays = 30, PricePaid = 500 });
+            await mediator.Send(new CreateSubscriptionInternalCommand { MemberId = 5, PackageId = 1, StartDate = today.AddDays(-20), DurationDays = 30, PricePaid = 750 });
+
+            // Lessons (TrainerId 1-3)
+            await mediator.Send(new CreateLessonInternalCommand { Name = "Sabah Fitness", TrainerId = 1, StartTime = today.AddDays(1).AddHours(7), EndTime = today.AddDays(1).AddHours(8), Capacity = 15, Location = "Salon A" });
+            await mediator.Send(new CreateLessonInternalCommand { Name = "Yoga Başlangıç", TrainerId = 2, StartTime = today.AddDays(1).AddHours(10), EndTime = today.AddDays(1).AddHours(11), Capacity = 12, Location = "Salon B" });
+            await mediator.Send(new CreateLessonInternalCommand { Name = "Kickboks", TrainerId = 3, StartTime = today.AddDays(2).AddHours(18), EndTime = today.AddDays(2).AddHours(19), Capacity = 10, Location = "Salon C" });
+            await mediator.Send(new CreateLessonInternalCommand { Name = "Pilates", TrainerId = 2, StartTime = today.AddDays(3).AddHours(11), EndTime = today.AddDays(3).AddHours(12), Capacity = 10, Location = "Salon B" });
+
+            // Reservations (MemberId 1-5, LessonId 1-4)
+            await mediator.Send(new CreateReservationInternalCommand { MemberId = 1, LessonId = 1 });
+            await mediator.Send(new CreateReservationInternalCommand { MemberId = 2, LessonId = 2 });
+            await mediator.Send(new CreateReservationInternalCommand { MemberId = 3, LessonId = 1 });
+            await mediator.Send(new CreateReservationInternalCommand { MemberId = 4, LessonId = 4 });
+            await mediator.Send(new CreateReservationInternalCommand { MemberId = 5, LessonId = 3 });
+
+            // Attendances
+            await mediator.Send(new CreateAttendanceInternalCommand { MemberId = 1, CheckIn = today.AddDays(-1).AddHours(8), CheckOut = today.AddDays(-1).AddHours(8).AddMinutes(90) });
+            await mediator.Send(new CreateAttendanceInternalCommand { MemberId = 2, CheckIn = today.AddDays(-1).AddHours(10), CheckOut = today.AddDays(-1).AddHours(11) });
+            await mediator.Send(new CreateAttendanceInternalCommand { MemberId = 3, CheckIn = today.AddHours(7).AddMinutes(30), CheckOut = today.AddHours(9) });
+            await mediator.Send(new CreateAttendanceInternalCommand { MemberId = 1, CheckIn = today.AddHours(7), Note = "Bugün sabah seansı" });
+
+            // Payments (MemberId 1-5, linked to subscriptions)
+            await mediator.Send(new CreatePaymentInternalCommand { MemberId = 1, SubscriptionId = 1, Amount = 1950, PaymentMethod = 1, ReferenceNo = "TXN-001" });
+            await mediator.Send(new CreatePaymentInternalCommand { MemberId = 2, SubscriptionId = 2, Amount = 750, PaymentMethod = 0, ReferenceNo = "TXN-002" });
+            await mediator.Send(new CreatePaymentInternalCommand { MemberId = 3, SubscriptionId = 3, Amount = 6500, PaymentMethod = 2, ReferenceNo = "TXN-003" });
+            await mediator.Send(new CreatePaymentInternalCommand { MemberId = 4, SubscriptionId = 4, Amount = 500, PaymentMethod = 0, ReferenceNo = "TXN-004" });
+            await mediator.Send(new CreatePaymentInternalCommand { MemberId = 5, SubscriptionId = 5, Amount = 750, PaymentMethod = 1, ReferenceNo = "TXN-005" });
+
             // Create default group
             await mediator.Send(new CreateGroupCommand
             {

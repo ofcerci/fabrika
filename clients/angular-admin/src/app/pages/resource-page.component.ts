@@ -101,6 +101,123 @@ const MODULE_DESCRIPTORS: Record<string, ModuleDescriptor> = {
     idKey: "id",
     columns: ["id", "level", "exceptionMessage", "timeStamp", "user", "value", "type"],
     fields: []
+  },
+
+  // ── Gym Modülleri ──────────────────────────────────────────────────────────
+  member: {
+    idKey: "id",
+    columns: ["id", "firstName", "lastName", "email", "phone", "status"],
+    fields: [
+      { key: "firstName", label: "Ad", type: "text", required: true },
+      { key: "lastName", label: "Soyad", type: "text", required: true },
+      { key: "email", label: "E-posta", type: "text", required: true },
+      { key: "phone", label: "Telefon", type: "text", required: true },
+      { key: "birthDate", label: "Doğum Tarihi", type: "text" },
+      { key: "gender", label: "Cinsiyet (0:Belirtilmedi 1:Erkek 2:Kadın)", type: "number" },
+      { key: "address", label: "Adres", type: "textarea" },
+      { key: "emergencyContactName", label: "Acil Kişi Adı", type: "text" },
+      { key: "emergencyContactPhone", label: "Acil Kişi Telefonu", type: "text" },
+      { key: "notes", label: "Notlar", type: "textarea" },
+      { key: "status", label: "Aktif", type: "boolean" }
+    ],
+    createClaim: "CreateMemberCommand",
+    updateClaim: "UpdateMemberCommand",
+    deleteClaim: "DeleteMemberCommand"
+  },
+
+  package: {
+    idKey: "id",
+    columns: ["id", "name", "durationDays", "price", "isActive"],
+    fields: [
+      { key: "name", label: "Paket Adı", type: "text", required: true },
+      { key: "description", label: "Açıklama", type: "textarea" },
+      { key: "durationDays", label: "Süre (Gün)", type: "number", required: true },
+      { key: "price", label: "Fiyat (₺)", type: "number", required: true },
+      { key: "isActive", label: "Aktif", type: "boolean" }
+    ],
+    createClaim: "CreatePackageCommand",
+    updateClaim: "UpdatePackageCommand",
+    deleteClaim: "DeletePackageCommand"
+  },
+
+  trainer: {
+    idKey: "id",
+    columns: ["id", "firstName", "lastName", "specialization", "phone", "status"],
+    fields: [
+      { key: "firstName", label: "Ad", type: "text", required: true },
+      { key: "lastName", label: "Soyad", type: "text", required: true },
+      { key: "email", label: "E-posta", type: "text", required: true },
+      { key: "phone", label: "Telefon", type: "text", required: true },
+      { key: "specialization", label: "Uzmanlık", type: "text", required: true },
+      { key: "hireDate", label: "İşe Başlama Tarihi", type: "text" },
+      { key: "notes", label: "Notlar", type: "textarea" },
+      { key: "status", label: "Aktif", type: "boolean" }
+    ],
+    createClaim: "CreateTrainerCommand",
+    updateClaim: "UpdateTrainerCommand",
+    deleteClaim: "DeleteTrainerCommand"
+  },
+
+  subscription: {
+    idKey: "id",
+    columns: ["id", "memberId", "packageId", "startDate", "endDate", "pricePaid", "status"],
+    fields: [
+      { key: "memberId", label: "Üye", type: "lookup", lookupPath: "/members", required: true },
+      { key: "packageId", label: "Paket", type: "lookup", lookupPath: "/packages", required: true },
+      { key: "startDate", label: "Başlangıç Tarihi", type: "text", required: true },
+      { key: "pricePaid", label: "Ödenen Tutar (₺)", type: "number", required: true },
+      { key: "notes", label: "Notlar", type: "textarea" }
+    ],
+    createClaim: "CreateSubscriptionCommand"
+  },
+
+  lesson: {
+    idKey: "id",
+    columns: ["id", "name", "trainerId", "startTime", "endTime", "capacity", "location"],
+    fields: [
+      { key: "name", label: "Ders Adı", type: "text", required: true },
+      { key: "trainerId", label: "Antrenör", type: "lookup", lookupPath: "/trainers", required: true },
+      { key: "startTime", label: "Başlangıç (ISO)", type: "text", required: true },
+      { key: "endTime", label: "Bitiş (ISO)", type: "text", required: true },
+      { key: "capacity", label: "Kapasite", type: "number", required: true },
+      { key: "location", label: "Konum", type: "text", required: true },
+      { key: "notes", label: "Notlar", type: "textarea" }
+    ],
+    createClaim: "CreateLessonCommand",
+    deleteClaim: "DeleteLessonCommand"
+  },
+
+  reservation: {
+    idKey: "id",
+    columns: ["id", "memberId", "lessonId", "reservedAt", "status"],
+    fields: [
+      { key: "memberId", label: "Üye", type: "lookup", lookupPath: "/members", required: true },
+      { key: "lessonId", label: "Ders", type: "lookup", lookupPath: "/lessons", required: true }
+    ],
+    createClaim: "CreateReservationCommand"
+  },
+
+  attendance: {
+    idKey: "id",
+    columns: ["id", "memberId", "checkIn", "checkOut"],
+    fields: [
+      { key: "memberId", label: "Üye", type: "lookup", lookupPath: "/members", required: true },
+      { key: "note", label: "Not", type: "text" }
+    ],
+    createClaim: "CreateAttendanceCommand"
+  },
+
+  payment: {
+    idKey: "id",
+    columns: ["id", "memberId", "amount", "paidAt", "paymentMethod", "status"],
+    fields: [
+      { key: "memberId", label: "Üye", type: "lookup", lookupPath: "/members", required: true },
+      { key: "amount", label: "Tutar (₺)", type: "number", required: true },
+      { key: "paymentMethod", label: "Yöntem (0:Nakit 1:Kart 2:Havale)", type: "number", required: true },
+      { key: "referenceNo", label: "Referans No", type: "text" },
+      { key: "notes", label: "Notlar", type: "textarea" }
+    ],
+    createClaim: "CreatePaymentCommand"
   }
 };
 

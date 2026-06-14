@@ -15,6 +15,17 @@ export const routes: Routes = [
   { path: "operationclaim", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "operationclaim" } },
   { path: "log", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "log" } },
   { path: "showcase", component: ShowcasePageComponent, canActivate: [authGuard] },
+
+  // Gym Modülleri
+  { path: "member", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "member" } },
+  { path: "package", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "package" } },
+  { path: "trainer", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "trainer" } },
+  { path: "subscription", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "subscription" } },
+  { path: "lesson", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "lesson" } },
+  { path: "reservation", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "reservation" } },
+  { path: "attendance", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "attendance" } },
+  { path: "payment", component: ResourcePageComponent, canActivate: [authGuard], data: { moduleKey: "payment" } },
+
   { path: "", pathMatch: "full", redirectTo: "dashboard" },
   { path: "**", redirectTo: "dashboard" }
 ];

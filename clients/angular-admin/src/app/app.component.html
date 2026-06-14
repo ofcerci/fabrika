@@ -11,7 +11,7 @@
         [attr.title]="translate('action.menu', 'Menu')"
         (click)="toggleSidebar()"
       ></button>
-      <h1>DevArchitecture</h1>
+      <img src="/logo.svg" alt="Fabrika" height="32" style="display:block;" />
     </div>
     <div class="topbar-right">
       <label class="lang-select-wrap">
@@ -45,7 +45,9 @@
   </header>
 
   <aside *ngIf="authService.isAuthenticated()" class="side-nav" [class.collapsed]="!sidebarOpen">
-    <div class="brand">Sakai</div>
+    <div class="brand">
+      <img src="/logo.svg" alt="Fabrika" height="28" style="display:block;margin:0 auto;" />
+    </div>
     <button
       *ngFor="let item of modules"
       class="nav-link"

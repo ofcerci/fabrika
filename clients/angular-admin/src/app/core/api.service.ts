@@ -18,7 +18,17 @@ export const CLIENT_MODULES: ClientModule[] = [
   { key: "translate", label: "Translates", route: "/translate", resourcePath: "/translates" },
   { key: "operationclaim", label: "Operation Claims", route: "/operationclaim", resourcePath: "/operation-claims" },
   { key: "log", label: "Logs", route: "/log", resourcePath: "/logs" },
-  { key: "showcase", label: "Showcase", route: "/showcase", resourcePath: "/showcase/rows" }
+  { key: "showcase", label: "Showcase", route: "/showcase", resourcePath: "/showcase/rows" },
+
+  // Gym Modülleri
+  { key: "member", label: "Üyeler", route: "/member", resourcePath: "/members" },
+  { key: "package", label: "Paketler", route: "/package", resourcePath: "/packages" },
+  { key: "trainer", label: "Antrenörler", route: "/trainer", resourcePath: "/trainers" },
+  { key: "subscription", label: "Abonelikler", route: "/subscription", resourcePath: "/subscriptions" },
+  { key: "lesson", label: "Dersler", route: "/lesson", resourcePath: "/lessons" },
+  { key: "reservation", label: "Rezervasyonlar", route: "/reservation", resourcePath: "/reservations" },
+  { key: "attendance", label: "Girişler", route: "/attendance", resourcePath: "/attendances" },
+  { key: "payment", label: "Ödemeler", route: "/payment", resourcePath: "/payments" }
 ];
 
 @Injectable({ providedIn: "root" })
