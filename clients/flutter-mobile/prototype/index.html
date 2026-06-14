@@ -26,6 +26,25 @@
   --green:#3DCC7A;
   --amber:#F5A623;
 }
+.light{
+  --black:#fff;
+  --bg:#F5F5F7;
+  --s1:#fff;
+  --s2:#F0F0F2;
+  --s3:#E8E8EB;
+  --s4:#DDDDE0;
+  --b1:rgba(0,0,0,0.07);
+  --b2:rgba(0,0,0,0.11);
+  --b3:rgba(0,0,0,0.18);
+  --w:#0A0A0A;
+  --g1:rgba(0,0,0,0.80);
+  --g2:rgba(0,0,0,0.45);
+  --g3:rgba(0,0,0,0.25);
+  --g4:rgba(0,0,0,0.10);
+  --red:#D92B2B;
+  --green:#1E9E52;
+  --amber:#C47D0A;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Inter',system-ui,sans-serif;background:#050505;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:36px 12px 64px;}
 
@@ -315,6 +334,7 @@ const ROLES={
     tabs:[
       {id:'schedule',ic:'ti-calendar',lbl:'Program'},
       {id:'mymembers',ic:'ti-users',lbl:'Üyelerim'},
+      {id:'tdiet',ic:'ti-salad',lbl:'Diyet'},
       {id:'checkin',ic:'ti-scan',lbl:'Yoklama'},
       {id:'tprofile',ic:'ti-user',lbl:'Profil'},
     ]
@@ -324,6 +344,7 @@ const ROLES={
     tabs:[
       {id:'home',ic:'ti-home',lbl:'Ana sayfa'},
       {id:'classes',ic:'ti-calendar',lbl:'Dersler'},
+      {id:'mdiet',ic:'ti-salad',lbl:'Diyet'},
       {id:'qr',ic:'ti-qrcode',lbl:'QR Giriş'},
       {id:'mprofile',ic:'ti-user',lbl:'Profil'},
     ]
@@ -339,13 +360,13 @@ const LESSONS=[
 ];
 
 const MEMBERS=[
-  {n:'Mehmet Çelik',p:'Yıllık',s:'Aktif',i:'MC',streak:5,last:'bugün 08:15'},
-  {n:'Seda Yıldız',p:'Aylık',s:'Aktif',i:'SY',streak:3,last:'bugün 09:30'},
-  {n:'Kerem Arslan',p:'3 Aylık',s:'Aktif',i:'KA',streak:7,last:'dün 18:00'},
-  {n:'Fatma Öz',p:'Yıllık',s:'Doldu',i:'FÖ',streak:0,last:'2 hafta önce'},
-  {n:'Ali Vural',p:'Aylık',s:'Aktif',i:'AV',streak:2,last:'bugün 07:45'},
-  {n:'Elif Şahin',p:'3 Aylık',s:'Aktif',i:'EŞ',streak:4,last:'dün 20:00'},
-  {n:'Berk Yılmaz',p:'Yıllık',s:'Aktif',i:'BY',streak:1,last:'bugün 10:00'},
+  {n:'Mehmet Çelik',p:'Yıllık',s:'Aktif',i:'MC',streak:5,last:'bugün 08:15',goal:'Kas kazanımı',sessions:23,diet:'Yüksek Protein',notes:'Bel ağrısı var, deadlift dikkatli yapılsın.',attend:[1,1,0,1,1,1,0,1,1,1,1,0,1,1]},
+  {n:'Seda Yıldız',p:'Aylık',s:'Aktif',i:'SY',streak:3,last:'bugün 09:30',goal:'Kilo verme',sessions:11,diet:'Düşük Karbonhidrat',notes:'',attend:[0,1,1,0,1,1,0,0,1,1,0,1,1,1]},
+  {n:'Kerem Arslan',p:'3 Aylık',s:'Aktif',i:'KA',streak:7,last:'dün 18:00',goal:'Güç & Dayanıklılık',sessions:31,diet:'Atanmadı',notes:'Sabah seanslarını tercih ediyor.',attend:[1,1,1,1,1,1,1,1,1,0,1,1,1,1]},
+  {n:'Fatma Öz',p:'Yıllık',s:'Doldu',i:'FÖ',streak:0,last:'2 hafta önce',goal:'Form koruma',sessions:8,diet:'Atanmadı',notes:'Üyelik yenileme için iletişime geçilmeli.',attend:[1,0,0,1,0,0,0,0,0,0,0,0,0,0]},
+  {n:'Ali Vural',p:'Aylık',s:'Aktif',i:'AV',streak:2,last:'bugün 07:45',goal:'Kilo verme',sessions:17,diet:'Yüksek Protein',notes:'',attend:[0,1,0,1,1,0,1,0,1,1,0,1,0,1]},
+  {n:'Elif Şahin',p:'3 Aylık',s:'Aktif',i:'EŞ',streak:4,last:'dün 20:00',goal:'Esneklik & Tonus',sessions:19,diet:'Dengeli',notes:'Akşam seanslarını tercih ediyor.',attend:[1,1,0,1,1,0,1,1,1,0,1,1,0,1]},
+  {n:'Berk Yılmaz',p:'Yıllık',s:'Aktif',i:'BY',streak:1,last:'bugün 10:00',goal:'Kas kazanımı',sessions:6,diet:'Atanmadı',notes:'Yeni üye, temel hareketler öğretilecek.',attend:[0,0,1,0,1,1,0,0,0,1,0,0,1,1]},
 ];
 
 const TRAINERS=[
@@ -381,17 +402,71 @@ function build(rootId, isIOS){
       </div>
       <div class="lcard">
         <h3>Giriş Yap</h3>
-        <p>Hesap türünü seçin</p>
+        <p>Hesabınıza erişin</p>
         <div class="field"><i class="ti ti-mail"></i><input type="email" placeholder="E-posta" value="admin@fabrika.com"/></div>
-        <div class="field"><i class="ti ti-lock"></i><input type="password" placeholder="Şifre" value="••••••••"/></div>
-        <div class="sl">HESAP TÜRÜ</div>
-        <div class="role-pick">
-          <div class="rp sel" id="${P}-rp-admin" onclick="W['${P}_selrole']('admin')"><div class="rp-dot"></div><div class="rp-lbl">Admin</div><div class="rp-sub">Yönetici</div></div>
-          <div class="rp" id="${P}-rp-trainer" onclick="W['${P}_selrole']('trainer')"><div class="rp-dot"></div><div class="rp-lbl">Antrenör</div><div class="rp-sub">Eğitmen</div></div>
-          <div class="rp" id="${P}-rp-member" onclick="W['${P}_selrole']('member')"><div class="rp-dot"></div><div class="rp-lbl">Üye</div><div class="rp-sub">Sporcu</div></div>
+        <div class="field" style="margin-bottom:14px;"><i class="ti ti-lock"></i><input type="password" placeholder="Şifre" value="••••••••"/><i class="ti ti-eye" style="font-size:15px;color:var(--g3);cursor:pointer;"></i></div>
+        <div style="text-align:right;margin-bottom:16px;"><span style="font-size:12px;color:var(--g2);cursor:pointer;">Şifremi unuttum</span></div>
+        <button class="cta" onclick="W['${P}_goto']('role-select')">GİRİŞ YAP</button>
+        <div class="dev" onclick="W['${P}_goto']('role-select')">Hızlı test girişi →</div>
+      </div>
+      <div style="margin-top:auto;padding-top:28px;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <div style="display:flex;align-items:center;background:var(--s3);border-radius:30px;padding:4px;gap:2px;">
+          <div id="${P}-btn-dark" onclick="W['${P}_toggleTheme'](false)" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;transition:all .2s;">
+            <i class="ti ti-moon" style="font-size:16px;color:#0A0A0A;"></i>
+          </div>
+          <div id="${P}-btn-light" onclick="W['${P}_toggleTheme'](true)" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;transition:all .2s;">
+            <i class="ti ti-sun" id="${P}-sun-ic" style="font-size:16px;color:var(--g3);"></i>
+          </div>
         </div>
-        <button class="cta" onclick="W['${P}_login']()">GİRİŞ YAP</button>
-        <div class="dev" onclick="W['${P}_login']()">Seçilen rolle hızlı giriş →</div>
+        <div style="font-size:10px;color:var(--g3);letter-spacing:0.5px;">v0.3.0 — Fabrika Gym © 2026</div>
+        <div style="font-size:10px;color:var(--g3);letter-spacing:0.5px;">Created by <a href="https://www.rinosis.com/" target="_blank" style="font-weight:700;letter-spacing:1px;color:var(--g3);text-decoration:none;border-bottom:1px solid var(--g4);">Rinosis</a></div>
+      </div>
+    </div>
+  </div>`;
+
+  // ROLE SELECT
+  root.innerHTML+=`<div class="view r" id="${P}-role-select">
+    ${statusBar()}
+    <div class="login-root" style="justify-content:flex-start;padding-top:40px;">
+      <div style="width:100%;margin-bottom:32px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:2px;color:var(--g3);margin-bottom:8px;">HOŞ GELDİNİZ</div>
+        <div style="font-size:24px;font-weight:700;color:var(--w);letter-spacing:-0.4px;">Hesap türünü seçin</div>
+        <div style="font-size:13px;color:var(--g2);margin-top:6px;">Bu cihazda nasıl giriş yapmak istiyorsunuz?</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;width:100%;">
+        <div style="background:var(--s2);border:1px solid var(--b2);border-radius:18px;padding:20px;cursor:pointer;display:flex;align-items:center;gap:16px;" onclick="W['${P}_selrole']('admin')">
+          <div style="width:46px;height:46px;background:var(--s3);border:1px solid var(--b2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="ti ti-layout-dashboard" style="font-size:22px;color:var(--g1);"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:15px;font-weight:700;color:var(--w);">Admin</div>
+            <div style="font-size:12px;color:var(--g2);margin-top:2px;">Gym yönetim paneli</div>
+          </div>
+          <i class="ti ti-arrow-right" style="font-size:18px;color:var(--g3);"></i>
+        </div>
+        <div style="background:var(--s2);border:1px solid var(--b2);border-radius:18px;padding:20px;cursor:pointer;display:flex;align-items:center;gap:16px;" onclick="W['${P}_selrole']('trainer')">
+          <div style="width:46px;height:46px;background:var(--s3);border:1px solid var(--b2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="ti ti-barbell" style="font-size:22px;color:var(--g1);"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:15px;font-weight:700;color:var(--w);">Antrenör</div>
+            <div style="font-size:12px;color:var(--g2);margin-top:2px;">Program ve üye takibi</div>
+          </div>
+          <i class="ti ti-arrow-right" style="font-size:18px;color:var(--g3);"></i>
+        </div>
+        <div style="background:var(--s2);border:1px solid var(--b2);border-radius:18px;padding:20px;cursor:pointer;display:flex;align-items:center;gap:16px;" onclick="W['${P}_selrole']('member')">
+          <div style="width:46px;height:46px;background:var(--s3);border:1px solid var(--b2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="ti ti-user" style="font-size:22px;color:var(--g1);"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:15px;font-weight:700;color:var(--w);">Üye</div>
+            <div style="font-size:12px;color:var(--g2);margin-top:2px;">Üyelik ve ders rezervasyonu</div>
+          </div>
+          <i class="ti ti-arrow-right" style="font-size:18px;color:var(--g3);"></i>
+        </div>
+      </div>
+      <div style="margin-top:24px;text-align:center;cursor:pointer;" onclick="W['${P}_goto']('login')">
+        <span style="font-size:12px;color:var(--g3);"><i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px;"></i> Geri dön</span>
       </div>
     </div>
   </div>`;
@@ -405,7 +480,7 @@ function build(rootId, isIOS){
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div><div style="font-size:11px;color:var(--g2);" id="${P}-greet">Günaydın</div><div class="tb-t">Fabrika Gym</div></div>
         <div style="display:flex;gap:9px;align-items:center;">
-          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i></div>
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;" onclick="W['${P}_goto']('notifications')"><i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i><div style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);"></div></div>
           <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;">AK</div>
         </div>
       </div>
@@ -536,6 +611,14 @@ function build(rootId, isIOS){
       <div class="sl">UYGULAMA</div>
       <div class="card" style="margin-bottom:12px;">
         ${[['Bildirimler','ti-bell'],['Yedekleme','ti-database'],['Güvenlik','ti-shield']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div class="dr-t">${r[0]}</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+        <div class="dr">
+          <div class="dr-ic"><i class="ti ti-sun" id="${P}-settings-theme-ic"></i></div>
+          <div class="dr-t">Görünüm</div>
+          <div style="display:flex;align-items:center;background:var(--s3);border-radius:30px;padding:3px;gap:2px;">
+            <div id="${P}-st-dark" onclick="W['${P}_toggleTheme'](false)" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;transition:all .2s;"><i class="ti ti-moon" style="font-size:13px;color:#0A0A0A;"></i></div>
+            <div id="${P}-st-light" onclick="W['${P}_toggleTheme'](true)" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;transition:all .2s;"><i class="ti ti-sun" id="${P}-st-sun-ic" style="font-size:13px;color:var(--g3);"></i></div>
+          </div>
+        </div>
       </div>
       <div class="card" style="background:rgba(255,68,68,0.04);border-color:rgba(255,68,68,0.12);cursor:pointer;" onclick="W['${P}_goto']('login')">
         <div class="dr"><div class="dr-ic" style="background:rgba(255,68,68,0.08);"><i class="ti ti-logout" style="color:var(--red);"></i></div><div class="dr-t" style="color:var(--red);">Çıkış Yap</div></div>
@@ -553,6 +636,7 @@ function build(rootId, isIOS){
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div><div class="tb-t">Program</div><div class="tb-s">14 Haziran, Cumartesi</div></div>
         <div style="display:flex;gap:9px;align-items:center;">
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;" onclick="W['${P}_goto']('chat-inbox')"><i class="ti ti-message" style="font-size:15px;color:var(--g2);"></i><div style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);"></div></div>
           <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);">AY</div>
         </div>
       </div>
@@ -588,7 +672,7 @@ function build(rootId, isIOS){
     <div class="search"><i class="ti ti-search"></i><span>Üye ara...</span></div>
     <div class="sc">
       <div class="card" style="margin:0 18px 18px;">
-        ${MEMBERS.map(m=>`<div class="mr" onclick="W['${P}_toast']('${m.n} profili açıldı')">
+        ${MEMBERS.map((m,mi)=>`<div class="mr" onclick="W['${P}_openMember'](${mi})">
           <div class="mav">${m.i}</div>
           <div style="flex:1;"><div class="mn">${m.n}</div><div class="ms">Son: ${m.last}</div></div>
           <div style="text-align:right;">
@@ -599,6 +683,206 @@ function build(rootId, isIOS){
       </div>
     </div>
     <div id="${P}-mymembers-nav"></div>
+  </div>`;
+
+  // NOTIFICATIONS (shared)
+  const NOTIFS=[
+    {ic:'ti-calendar-event',cat:'Ders',title:'Sabah Fitness başlıyor',body:'Bugün 08:00\'de Salon A\'da — 30 dk kaldı.',time:'30 dk önce',read:false},
+    {ic:'ti-salad',cat:'Diyet',title:'Öğle öğünü hatırlatıcısı',body:'Antrenörünüzün hazırladığı diyet planına göre öğle yemeği zamanı.',time:'2 sa önce',read:false},
+    {ic:'ti-droplet',cat:'Su',title:'Su içme zamanı!',body:'Günlük hedefinizin %60\'ına ulaştınız. 1.000 ml daha için.',time:'3 sa önce',read:false},
+    {ic:'ti-trophy',cat:'Başarı',title:'5 günlük seri!',body:'5 gün üst üste antrenman yaptınız. Harika bir performans!',time:'Dün',read:true},
+    {ic:'ti-credit-card',cat:'Üyelik',title:'Üyelik yenileme hatırlatıcısı',body:'Üyeliğinizin bitmesine 30 gün kaldı. Şimdi yenileyin.',time:'2 gün önce',read:true},
+    {ic:'ti-user-check',cat:'Antrenör',title:'Program güncellendi',body:'Ahmet Yılmaz antrenman programınızı güncelledi.',time:'3 gün önce',read:true},
+  ];
+  root.innerHTML+=`<div class="view r" id="${P}-notifications">
+    ${statusBar()}
+    <div class="dh">
+      <button class="back" onclick="W['${P}_backNotif']()"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <div class="tb-t">Bildirimler</div>
+        <div style="font-size:12px;color:var(--g2);cursor:pointer;" onclick="W['${P}_markAllRead']()">Tümünü okundu yap</div>
+      </div>
+    </div>
+    <div class="sc p" id="${P}-notif-list">
+      ${NOTIFS.map((n,i)=>`<div id="${P}-notif-${i}" onclick="W['${P}_readNotif'](${i})" style="display:flex;gap:12px;padding:12px 14px;border-radius:14px;background:${!n.read?'var(--s2)':'transparent'};border:1px solid ${!n.read?'var(--b2)':'transparent'};margin-bottom:8px;cursor:pointer;transition:all .2s;">
+        <div style="width:38px;height:38px;border-radius:12px;background:var(--s3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="ti ${n.ic}" style="font-size:17px;color:var(--g1);"></i>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <span style="font-size:10px;font-weight:600;color:var(--g3);letter-spacing:0.5px;">${n.cat.toUpperCase()}</span>
+            ${!n.read?`<div id="${P}-notif-dot-${i}" style="width:6px;height:6px;border-radius:50%;background:var(--w);"></div>`:`<div id="${P}-notif-dot-${i}" style="width:6px;height:6px;border-radius:50%;background:transparent;"></div>`}
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--w);margin-bottom:2px;">${n.title}</div>
+          <div style="font-size:12px;color:var(--g2);line-height:1.5;">${n.body}</div>
+          <div style="font-size:11px;color:var(--g3);margin-top:5px;">${n.time}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  // MEMBER DETAIL (trainer)
+  root.innerHTML+=`<div class="view r" id="${P}-member-detail">
+    ${statusBar()}
+    <div class="dh">
+      <button class="back" onclick="W['${P}_goto']('mymembers')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:8px;">
+        <div id="${P}-md-av" style="width:52px;height:52px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--w);flex-shrink:0;"></div>
+        <div>
+          <div id="${P}-md-name" style="font-size:18px;font-weight:700;color:var(--w);"></div>
+          <div id="${P}-md-pkg" style="font-size:12px;color:var(--g2);margin-top:2px;"></div>
+        </div>
+        <div id="${P}-md-badge" style="margin-left:auto;"></div>
+      </div>
+    </div>
+    <div class="sc p">
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div class="card" style="text-align:center;padding:12px 8px;">
+          <div id="${P}-md-streak" style="font-size:20px;font-weight:700;color:var(--w);"></div>
+          <div style="font-size:10px;color:var(--g3);margin-top:3px;">Seri (gün)</div>
+        </div>
+        <div class="card" style="text-align:center;padding:12px 8px;">
+          <div id="${P}-md-sessions" style="font-size:20px;font-weight:700;color:var(--w);"></div>
+          <div style="font-size:10px;color:var(--g3);margin-top:3px;">Bu ay seans</div>
+        </div>
+        <div class="card" style="text-align:center;padding:12px 8px;">
+          <div id="${P}-md-attend-pct" style="font-size:20px;font-weight:700;color:var(--w);"></div>
+          <div style="font-size:10px;color:var(--g3);margin-top:3px;">Devam oranı</div>
+        </div>
+      </div>
+      <!-- Attendance heatmap -->
+      <div class="sl">SON 2 HAFTA KATILIM</div>
+      <div class="card" style="margin-bottom:16px;padding:14px;">
+        <div id="${P}-md-heatmap" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+      </div>
+      <!-- Goal & Diet -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div class="card" style="padding:12px;">
+          <div style="font-size:10px;color:var(--g3);margin-bottom:5px;letter-spacing:0.5px;">HEDEF</div>
+          <div id="${P}-md-goal" style="font-size:13px;font-weight:600;color:var(--w);"></div>
+        </div>
+        <div class="card" style="padding:12px;">
+          <div style="font-size:10px;color:var(--g3);margin-bottom:5px;letter-spacing:0.5px;">DİYET PLANI</div>
+          <div id="${P}-md-diet" style="font-size:13px;font-weight:600;color:var(--w);"></div>
+        </div>
+      </div>
+      <!-- Notes -->
+      <div class="sl">NOTLAR</div>
+      <div class="card" style="margin-bottom:16px;padding:14px;" id="${P}-md-notes-wrap">
+        <p id="${P}-md-notes" style="font-size:13px;color:var(--g1);line-height:1.7;"></p>
+      </div>
+      <!-- Actions -->
+      <!-- Body summary card -->
+      <div class="sl">VÜCUT ÖZETİ</div>
+      <div class="card cp" style="margin-bottom:16px;cursor:pointer;" onclick="W['${P}_openProgress']()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-size:12px;color:var(--g2);">Son ölçüm: 14 Haz</div>
+          <div style="font-size:12px;color:var(--g2);">Tümü <i class="ti ti-chevron-right" style="font-size:11px;"></i></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
+          ${[['82','kg','Kilo','−6','green'],['18%','','Yağ','−4%','green'],['24.7','','BKİ','Normal','amber'],['84','cm','Bel','−2','green']].map(([v,u,lbl,ch,col])=>`
+          <div style="background:var(--s3);border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:13px;font-weight:700;color:var(--w);">${v}<span style="font-size:9px;font-weight:400;color:var(--g3);margin-left:1px;">${u}</span></div>
+            <div style="font-size:9px;color:var(--g3);margin-top:2px;">${lbl}</div>
+            <div style="font-size:9px;color:var(--${col});margin-top:2px;">${ch}</div>
+          </div>`).join('')}
+        </div>
+        <svg viewBox="0 0 300 28" style="width:100%;display:block;">
+          ${(()=>{
+            const pts=[88,87,86.5,86,85.2,84.8,84,83.5,83,82.8,82.5,82];
+            const n=pts.length,min=Math.min(...pts)-0.5,max=Math.max(...pts)+0.5;
+            const x=i=>i*(300/(n-1)),y=v=>24-((v-min)/(max-min))*20;
+            const path=pts.map((v,i)=>`${i===0?'M':'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+            return`<path d="${path} L${x(n-1)},28 L0,28 Z" fill="rgba(255,255,255,0.06)"/><path d="${path}" fill="none" stroke="var(--w)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(n-1).toFixed(1)}" cy="${y(pts[n-1]).toFixed(1)}" r="3" fill="var(--w)"/>`;
+          })()}
+        </svg>
+      </div>
+      <div class="sl">İŞLEMLER</div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="dr" onclick="W['${P}_toast']('Diyet planı atama açıldı')"><div class="dr-ic"><i class="ti ti-salad"></i></div><div class="dr-t">Diyet Planı Ata</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+        <div class="dr" onclick="W['${P}_toast']('Antrenman programı açıldı')"><div class="dr-ic"><i class="ti ti-barbell"></i></div><div class="dr-t">Antrenman Programı Düzenle</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+        <div class="dr" onclick="W['${P}_openChatFromMember']()"><div class="dr-ic"><i class="ti ti-message"></i></div><div class="dr-t">Mesaj Gönder</div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+      </div>
+    </div>
+  </div>`;
+
+  // CHAT INBOX (trainer)
+  const CHAT_THREADS=[
+    {mi:0,unread:2,last:'Antrenman programım güncellendi mi?',time:'09:42'},
+    {mi:1,unread:0,last:'Teşekkürler, diyet planını aldım.',time:'Dün'},
+    {mi:2,unread:1,last:'Salı seansını kaçırabilir miyim?',time:'Dün'},
+    {mi:4,unread:0,last:'Tamam görüşürüz!',time:'Pzt'},
+  ];
+  const CHAT_MSGS={
+    0:[
+      {from:'member',text:'Merhaba hocam, iyi günler!',time:'09:10'},
+      {from:'trainer',text:'Merhaba Mehmet, nasılsın?',time:'09:11'},
+      {from:'member',text:'İyiyim teşekkürler. Deadlift ağırlığını artırabilir miyiz bu hafta?',time:'09:15'},
+      {from:'trainer',text:'Tabii ki! Bu hafta 80kg\'dan 85kg\'a çıkalım. Isınmayı iyi yap.',time:'09:17'},
+      {from:'member',text:'Antrenman programım güncellendi mi?',time:'09:42'},
+    ],
+    1:[
+      {from:'trainer',text:'Seda hanım, yeni diyet planınızı sisteme ekledim.',time:'Dün 14:20'},
+      {from:'member',text:'Teşekkürler, diyet planını aldım.',time:'Dün 14:35'},
+    ],
+    2:[
+      {from:'member',text:'Hocam salı seansını kaçırabilir miyim?',time:'Dün 18:05'},
+    ],
+    4:[
+      {from:'trainer',text:'Ali bey, bu hafta harika ilerleme!',time:'Pzt 11:00'},
+      {from:'member',text:'Tamam görüşürüz!',time:'Pzt 11:30'},
+    ],
+  };
+
+  root.innerHTML+=`<div class="view r" id="${P}-chat-inbox">
+    ${statusBar()}
+    <div class="dh">
+      <button class="back" onclick="W['${P}_goto']('mymembers')"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div class="tb-t" style="margin-top:4px;">Mesajlar</div>
+    </div>
+    <div class="sc">
+      ${CHAT_THREADS.map(t=>{
+        const m=MEMBERS[t.mi];
+        return`<div onclick="W['${P}_openChat'](${t.mi})" style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='transparent'">
+          <div style="position:relative;">
+            <div class="mav" style="width:44px;height:44px;font-size:14px;">${m.i}</div>
+            ${t.unread?`<div style="position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:var(--w);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--black);">${t.unread}</div>`:''}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+              <div style="font-size:13px;font-weight:${t.unread?700:600};color:var(--w);">${m.n}</div>
+              <div style="font-size:10px;color:var(--g3);">${t.time}</div>
+            </div>
+            <div style="font-size:12px;color:${t.unread?'var(--g1)':'var(--g3)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:${t.unread?500:400};">${t.last}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+
+  // CHAT VIEW (shared trainer ↔ member)
+  root.innerHTML+=`<div class="view r" id="${P}-chat">
+    ${statusBar()}
+    <div style="background:var(--s1);border-bottom:1px solid var(--b1);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+      <button class="back" style="margin:0;" onclick="W['${P}_backChat']()"><i class="ti ti-arrow-left" style="font-size:15px;"></i></button>
+      <div id="${P}-chat-av" class="mav" style="width:36px;height:36px;font-size:12px;flex-shrink:0;"></div>
+      <div style="flex:1;">
+        <div id="${P}-chat-name" style="font-size:14px;font-weight:700;color:var(--w);"></div>
+        <div style="font-size:11px;color:var(--green);">Çevrimiçi</div>
+      </div>
+      <i class="ti ti-dots-vertical" style="font-size:18px;color:var(--g2);cursor:pointer;"></i>
+    </div>
+    <div class="sc" id="${P}-chat-messages" style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="padding:10px 12px;background:var(--s1);border-top:1px solid var(--b1);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <div style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:22px;padding:9px 14px;display:flex;align-items:center;gap:8px;">
+        <input id="${P}-chat-input" type="text" placeholder="Mesaj yaz..." style="flex:1;background:none;border:none;outline:none;font-size:13px;color:var(--w);font-family:inherit;" onkeydown="if(event.key==='Enter')W['${P}_sendMsg']()"/>
+        <i class="ti ti-paperclip" style="font-size:16px;color:var(--g3);cursor:pointer;"></i>
+      </div>
+      <div onclick="W['${P}_sendMsg']()" style="width:40px;height:40px;border-radius:50%;background:var(--w);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+        <i class="ti ti-send" style="font-size:17px;color:var(--black);"></i>
+      </div>
+    </div>
   </div>`;
 
   // CHECK-IN (trainer)
@@ -675,7 +959,10 @@ function build(rootId, isIOS){
     <div class="tb">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div><div style="font-size:11px;color:var(--g2);" id="${P}-mgreet">Günaydın</div><div class="tb-t">Fabrika Gym</div></div>
-        <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;">MC</div>
+        <div style="display:flex;gap:9px;align-items:center;">
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;" onclick="W['${P}_goto']('notifications')"><i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i><div style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);"></div></div>
+          <div style="width:30px;height:30px;background:var(--s3);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--w);cursor:pointer;">MC</div>
+        </div>
       </div>
     </div>
     <div class="sc p">
@@ -707,6 +994,32 @@ function build(rootId, isIOS){
         </div>
         <span class="badge white">Rezerve</span>
       </div>
+      <div class="sl">VÜCUT ÖZETİ</div>
+      <div class="card cp" style="cursor:pointer;" onclick="W['${P}_openProgress']()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-size:13px;font-weight:600;color:var(--w);">Son ölçüm: 14 Haz</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--g2);">Detay <i class="ti ti-chevron-right" style="font-size:12px;"></i></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+          ${[['82','kg','Kilo','−6','green'],['18%','','Yağ','−4%','green'],['24.7','','BKİ','Normal','amber'],['84','cm','Bel','−2','green']].map(([v,u,lbl,ch,col])=>`
+          <div style="background:var(--s3);border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:14px;font-weight:700;color:var(--w);">${v}<span style="font-size:9px;font-weight:400;color:var(--g3);margin-left:1px;">${u}</span></div>
+            <div style="font-size:9px;color:var(--g3);margin-top:2px;">${lbl}</div>
+            <div style="font-size:9px;color:var(--${col});margin-top:3px;">${ch}</div>
+          </div>`).join('')}
+        </div>
+        <!-- mini sparkline -->
+        <svg viewBox="0 0 300 32" style="width:100%;display:block;">
+          ${(()=>{
+            const pts=[88,87,86.5,86,85.2,84.8,84,83.5,83,82.8,82.5,82];
+            const n=pts.length; const min=Math.min(...pts)-0.5, max=Math.max(...pts)+0.5;
+            const x=i=>i*(300/(n-1)); const y=v=>28-((v-min)/(max-min))*24;
+            const path=pts.map((v,i)=>`${i===0?'M':'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+            const area=path+` L${x(n-1)},32 L0,32 Z`;
+            return`<defs><linearGradient id="${P}-spk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--w)" stop-opacity="0.1"/><stop offset="100%" stop-color="var(--w)" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#${P}-spk)"/><path d="${path}" fill="none" stroke="var(--w)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(n-1).toFixed(1)}" cy="${y(pts[n-1]).toFixed(1)}" r="3" fill="var(--w)"/>`;
+          })()}
+        </svg>
+      </div>
       <div style="height:10px;"></div>
     </div>
     <div id="${P}-home-nav"></div>
@@ -715,26 +1028,121 @@ function build(rootId, isIOS){
   // CLASSES (member)
   root.innerHTML+=`<div class="view r" id="${P}-classes">
     ${statusBar()}
-    <div class="tb"><div class="tb-t">Dersler</div><div class="tb-s">Haziran 2026</div></div>
-    <div class="ds">
-      ${['9 Sal','10 Çar','11 Per','12 Cum','13 Cmt','14 Paz','15 Pzt'].map((d,i)=>{const[n,dy]=d.split(' ');return`<div class="dp ${i===4?'on':''}" onclick="selDate(this)"><div class="dn">${n}</div><div class="dd">${dy}</div></div>`}).join('')}
+    <div class="tb" style="padding-bottom:0;">
+      <div class="tb-t">Dersler</div>
+      <div style="display:flex;gap:0;margin-top:12px;">
+        <div id="${P}-cl-tab-group" onclick="W['${P}_clTab']('group')" style="flex:1;text-align:center;padding:9px 0;font-size:12px;font-weight:700;color:var(--w);border-bottom:2px solid var(--w);cursor:pointer;">Grup</div>
+        <div id="${P}-cl-tab-solo" onclick="W['${P}_clTab']('solo')" style="flex:1;text-align:center;padding:9px 0;font-size:12px;font-weight:600;color:var(--g3);border-bottom:2px solid transparent;cursor:pointer;">Birebir</div>
+      </div>
     </div>
-    <div class="sc p">
-      ${LESSONS.map(l=>`<div class="lc" onclick="W['${P}_det'](${JSON.stringify(l).replace(/"/g,'&quot;')})">
-        <div class="lc-bar"></div>
-        <div class="lc-in">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;">
-            <div><div class="lc-t">${l.n}</div><div class="lc-s"><i class="ti ti-user" style="font-size:10px;"></i> ${l.tr}</div></div>
-            <div class="lc-time">${l.t}</div>
+
+    <!-- GRUP -->
+    <div id="${P}-cl-group">
+      <div class="ds">
+        ${['9 Sal','10 Çar','11 Per','12 Cum','13 Cmt','14 Paz','15 Pzt'].map((d,i)=>{const[n,dy]=d.split(' ');return`<div class="dp ${i===4?'on':''}" onclick="selDate(this)"><div class="dn">${n}</div><div class="dd">${dy}</div></div>`}).join('')}
+      </div>
+      <div class="sc p">
+        ${LESSONS.map(l=>`<div class="lc" onclick="W['${P}_det'](${JSON.stringify(l).replace(/"/g,'&quot;')})">
+          <div class="lc-bar"></div>
+          <div class="lc-in">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+              <div><div class="lc-t">${l.n}</div><div class="lc-s"><i class="ti ti-user" style="font-size:10px;"></i> ${l.tr}</div></div>
+              <div class="lc-time">${l.t}</div>
+            </div>
+            <div class="lc-r">
+              <span class="badge muted">${l.type}</span>
+              <span class="badge muted">${l.dur}</span>
+              <span class="badge muted">${l.loc}</span>
+              <span style="margin-left:auto;font-size:10px;color:var(--g2);">${l.cap}/${l.max}</span>
+            </div>
           </div>
-          <div class="lc-r">
-            <span class="badge muted">${l.type}</span>
-            <span class="badge muted">${l.dur}</span>
-            <span class="badge muted">${l.loc}</span>
-            <span style="margin-left:auto;font-size:10px;color:var(--g2);">${l.cap}/${l.max}</span>
-          </div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- BİREBİR -->
+    <div id="${P}-cl-solo" style="display:none;flex-direction:column;flex:1;">
+      <div class="ds" style="background:var(--s1);border-bottom:1px solid var(--b1);">
+        ${['9 Sal','10 Çar','11 Per','12 Cum','13 Cmt','14 Paz','15 Pzt'].map((d,i)=>{
+          const[n,dy]=d.split(' ');
+          const hasDot=i===4||i===1||i===6;
+          return`<div class="dp ${i===4?'on':''}" onclick="selDate(this)" style="position:relative;">
+            <div class="dn">${n}</div><div class="dd">${dy}</div>
+            ${hasDot?`<div style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--w);opacity:0.5;"></div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="sc p">
+        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+          <span class="badge white">Tümü</span>
+          <span class="badge muted"><i class="ti ti-map-pin" style="font-size:10px;vertical-align:-1px;"></i> Yerinde</span>
+          <span class="badge muted"><i class="ti ti-video" style="font-size:10px;vertical-align:-1px;"></i> Uzaktan</span>
         </div>
-      </div>`).join('')}
+        ${[
+          {name:'Sabah Kondisyon',trainer:'Ahmet Yılmaz',time:'08:00',type:'Yerinde',status:'active',prog:[
+            {ex:'Isınma koşusu',sets:'1×10 dk',done:'done'},
+            {ex:'Squat',sets:'4×12',done:'done'},
+            {ex:'Deadlift',sets:'3×10',done:'active'},
+            {ex:'Bench Press',sets:'4×10',done:'none'},
+            {ex:'Pull-up',sets:'3×8',done:'none'},
+            {ex:'Plank',sets:'3×60sn',done:'none'},
+          ]},
+          {name:'Akşam Mobilite',trainer:'Zeynep Kaya',time:'18:00',type:'Uzaktan',status:'upcoming',prog:[
+            {ex:'Foam roller',sets:'1×10 dk',done:'none'},
+            {ex:'Hip flexor stretch',sets:'3×30sn',done:'none'},
+            {ex:'Shoulder mobility',sets:'3×15',done:'none'},
+            {ex:'Cat-cow',sets:'3×20',done:'none'},
+          ]},
+        ].map((s,si)=>`<div class="card" style="margin-bottom:12px;">
+          <div class="cp" style="border-bottom:1px solid var(--b1);">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">
+              <div>
+                <div style="font-size:15px;font-weight:700;color:var(--w);">${s.name}</div>
+                <div style="font-size:11px;color:var(--g2);margin-top:3px;"><i class="ti ti-user" style="font-size:10px;"></i> ${s.trainer}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:700;color:var(--w);">${s.time}</div>
+                <span class="badge ${s.type==='Uzaktan'?'muted':'muted'}" style="margin-top:4px;">
+                  <i class="ti ${s.type==='Uzaktan'?'ti-video':'ti-map-pin'}" style="font-size:9px;vertical-align:-1px;"></i> ${s.type}
+                </span>
+              </div>
+            </div>
+            ${s.status==='active'?`<div style="display:flex;align-items:center;gap:6px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);"></div>
+              <span style="font-size:11px;color:var(--green);font-weight:600;">Devam ediyor</span>
+            </div>`:`<div style="display:flex;align-items:center;gap:6px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--b3);"></div>
+              <span style="font-size:11px;color:var(--g2);">Bugün saat ${s.time}</span>
+            </div>`}
+          </div>
+          <!-- ANTRENMAN PROGRAMI -->
+          <div>
+            <div style="padding:10px 18px 6px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--g3);">ANTRENMAN PROGRAMI</div>
+            ${s.prog.map((ex,ei)=>`<div id="${P}-ex-${si}-${ei}" style="display:flex;align-items:center;gap:12px;padding:11px 18px;border-top:1px solid var(--b1);">
+              <div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+                background:${ex.done==='done'?'var(--w)':ex.done==='active'?'var(--s3)':'var(--s3)'};
+                border:${ex.done==='done'?'none':ex.done==='active'?'2px solid var(--w)':'1px solid var(--b2)'};
+                cursor:pointer;" onclick="W['${P}_cycleEx'](${si},${ei})">
+                ${ex.done==='done'?`<i class="ti ti-check" style="font-size:13px;color:var(--black);"></i>`:
+                  ex.done==='active'?`<i class="ti ti-player-play" style="font-size:11px;color:var(--w);"></i>`:''}
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:${ex.done==='active'?'700':'500'};color:${ex.done==='done'?'var(--g3)':ex.done==='active'?'var(--w)':'var(--g1)'};
+                  text-decoration:${ex.done==='done'?'line-through':'none'};">${ex.ex}</div>
+                <div style="font-size:11px;color:var(--g3);margin-top:1px;">${ex.sets}</div>
+              </div>
+              ${ex.done==='active'?`<button onclick="event.stopPropagation();W['${P}_finishEx'](${si},${ei})" style="background:var(--w);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--black);cursor:pointer;font-family:inherit;">Bitirdim</button>`:''}
+            </div>`).join('')}
+            <!-- genel ilerleme -->
+            <div style="padding:12px 18px;border-top:1px solid var(--b1);display:flex;align-items:center;gap:10px;">
+              <div style="flex:1;height:3px;background:var(--s3);border-radius:3px;">
+                <div id="${P}-prog-bar-${si}" style="height:3px;border-radius:3px;background:var(--w);width:${Math.round(s.prog.filter(e=>e.done==='done').length/s.prog.length*100)}%;transition:width .3s;"></div>
+              </div>
+              <span id="${P}-prog-txt-${si}" style="font-size:11px;color:var(--g2);min-width:32px;text-align:right;">${s.prog.filter(e=>e.done==='done').length}/${s.prog.length}</span>
+            </div>
+          </div>
+        </div>`).join('')}
+      </div>
     </div>
     <div id="${P}-classes-nav"></div>
   </div>`;
@@ -785,6 +1193,18 @@ function build(rootId, isIOS){
         <div class="sl">ÜYELİK</div>
         <div class="card" style="margin-bottom:12px;">
           ${[['Paket bilgisi','ti-credit-card','Yıllık Paket'],['Ödeme geçmişi','ti-receipt','Son: ₺2.400'],['Devam geçmişi','ti-calendar-stats','%76 devam']].map(r=>`<div class="dr" onclick="W['${P}_toast']('${r[0]} açıldı')"><div class="dr-ic"><i class="ti ${r[1]}"></i></div><div><div class="dr-t">${r[0]}</div><div class="dr-s">${r[2]}</div></div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>`).join('')}
+          <div class="dr" onclick="W['${P}_openProgress']()"><div class="dr-ic"><i class="ti ti-ruler-measure"></i></div><div><div class="dr-t">Vücut Ölçümleri</div><div class="dr-s">Son: 82 kg • %18 yağ</div></div><div class="dr-ch"><i class="ti ti-chevron-right"></i></div></div>
+        </div>
+        <div class="sl">ANTRENÖRÜM</div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="dr" onclick="W['${P}_openChat'](0)">
+            <div class="mav" style="width:32px;height:32px;font-size:11px;border-radius:50%;">AY</div>
+            <div style="flex:1;"><div class="dr-t">Ahmet Yılmaz</div><div class="dr-s">Antrenörünüz • Çevrimiçi</div></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div>
+              <div class="dr-ch"><i class="ti ti-chevron-right"></i></div>
+            </div>
+          </div>
         </div>
         <div class="sl">AYARLAR</div>
         <div class="card" style="margin-bottom:12px;">
@@ -797,6 +1217,438 @@ function build(rootId, isIOS){
       </div>
     </div>
     <div id="${P}-mprofile-nav"></div>
+  </div>`;
+
+  // PROGRESS / BODY METRICS (member)
+  const WEIGHT_DATA=[88,87,86.5,86,85.2,84.8,84,83.5,83,82.8,82.5,82];
+  const MEASURE_HISTORY=[
+    {date:'14 Haz',w:82,fat:18,chest:102,waist:84,hip:96,arm:36},
+    {date:'1 Haz', w:83.5,fat:19,chest:103,waist:86,hip:97,arm:35},
+    {date:'15 May',w:85.2,fat:20.5,chest:104,waist:88,hip:98,arm:35},
+    {date:'1 May', w:87,fat:22,chest:105,waist:91,hip:99,arm:34},
+  ];
+  root.innerHTML+=`<div class="view r" id="${P}-progress">
+    ${statusBar()}
+    <div class="dh">
+      <button class="back" onclick="W['${P}_backProgress']()"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Geri</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <div class="tb-t">Vücut Ölçümleri</div>
+        <button id="${P}-add-meas-btn" style="background:var(--s3);border:1px solid var(--b2);color:var(--w);border-radius:10px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="W['${P}_openAddMeasure']()"><i class="ti ti-plus" style="font-size:11px;"></i> Ölçüm Ekle</button>
+      </div>
+    </div>
+    <div class="sc p">
+      <!-- Current stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div class="card" style="text-align:center;padding:14px 8px;">
+          <div style="font-size:22px;font-weight:700;color:var(--w);">82</div>
+          <div style="font-size:10px;color:var(--g3);margin-top:2px;">kg</div>
+          <div style="font-size:10px;color:var(--green);margin-top:4px;"><i class="ti ti-trending-down" style="font-size:10px;"></i> −6 kg</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px 8px;">
+          <div style="font-size:22px;font-weight:700;color:var(--w);">18%</div>
+          <div style="font-size:10px;color:var(--g3);margin-top:2px;">Yağ oranı</div>
+          <div style="font-size:10px;color:var(--green);margin-top:4px;"><i class="ti ti-trending-down" style="font-size:10px;"></i> −4%</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px 8px;">
+          <div style="font-size:22px;font-weight:700;color:var(--w);">24.7</div>
+          <div style="font-size:10px;color:var(--g3);margin-top:2px;">BKİ</div>
+          <div style="font-size:10px;color:var(--amber);margin-top:4px;">Normal</div>
+        </div>
+      </div>
+
+      <!-- Weight chart -->
+      <div class="sl">KİLO GRAFİĞİ (12 hafta)</div>
+      <div class="card" style="margin-bottom:16px;padding:16px 12px 8px;">
+        <svg viewBox="0 0 320 90" style="width:100%;overflow:visible;">
+          <defs><linearGradient id="${P}-wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--w)" stop-opacity="0.15"/><stop offset="100%" stop-color="var(--w)" stop-opacity="0"/></linearGradient></defs>
+          ${(()=>{
+            const pts=WEIGHT_DATA; const n=pts.length;
+            const min=Math.min(...pts)-1, max=Math.max(...pts)+1;
+            const x=i=>i*(320/(n-1));
+            const y=v=>80-((v-min)/(max-min))*70;
+            const path=pts.map((v,i)=>`${i===0?'M':'L'}${x(i)},${y(v)}`).join(' ');
+            const area=path+` L${x(n-1)},90 L0,90 Z`;
+            const dots=pts.map((v,i)=>i===n-1?`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="var(--w)" stroke="var(--bg)" stroke-width="2"/><text x="${x(i)}" y="${y(v)-8}" text-anchor="middle" font-size="9" fill="var(--w)" font-weight="600">${v}</text>`:
+              i===0?`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="var(--g3)"/>`:'').join('');
+            return`<path d="${area}" fill="url(#${P}-wg)"/><path d="${path}" fill="none" stroke="var(--w)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+          })()}
+          <text x="0" y="88" font-size="8" fill="var(--g3)">12 hf önce</text>
+          <text x="320" y="88" font-size="8" fill="var(--g3)" text-anchor="end">Bugün</text>
+        </svg>
+      </div>
+
+      <!-- Current measurements -->
+      <div class="sl">GÜNCEL ÖLÇÜMLER</div>
+      <div class="card" style="margin-bottom:16px;">
+        ${[['Göğüs','102 cm','ti-circle'],['Bel','84 cm','ti-circle'],['Kalça','96 cm','ti-circle'],['Kol','36 cm','ti-circle']].map(([lbl,val,ic],i)=>{
+          const prev=[103,86,97,35][i]; const cur=parseInt(val);
+          const diff=cur-prev; const better=(lbl==='Bel'||lbl==='Kalça')?diff<0:diff>0;
+          return`<div class="dr"><div class="dr-ic"><i class="ti ${ic}"></i></div><div class="dr-t">${lbl}</div><div style="margin-left:auto;text-align:right;"><div style="font-size:14px;font-weight:600;color:var(--w);">${val}</div><div style="font-size:10px;color:${diff===0?'var(--g3)':better?'var(--green)':'var(--red)'};">${diff===0?'—':diff>0?'↑'+diff:diff} cm</div></div></div>`;
+        }).join('')}
+      </div>
+
+      <!-- History -->
+      <div class="sl">ÖLÇÜM GEÇMİŞİ</div>
+      ${MEASURE_HISTORY.map((m,i)=>`<div class="card" style="margin-bottom:8px;padding:12px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${i===0?8:0}px;">
+          <div style="font-size:13px;font-weight:600;color:var(--w);">${m.date}</div>
+          <div style="display:flex;gap:12px;">
+            <div style="text-align:center;"><div style="font-size:13px;font-weight:600;color:var(--w);">${m.w} kg</div><div style="font-size:9px;color:var(--g3);">Kilo</div></div>
+            <div style="text-align:center;"><div style="font-size:13px;font-weight:600;color:var(--w);">${m.fat}%</div><div style="font-size:9px;color:var(--g3);">Yağ</div></div>
+            <div style="text-align:center;"><div style="font-size:13px;font-weight:600;color:var(--w);">${m.waist}</div><div style="font-size:9px;color:var(--g3);">Bel</div></div>
+          </div>
+        </div>
+        ${i===0?`<div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="badge ok">En güncel</span></div>`:''}
+      </div>`).join('')}
+      <div style="height:14px;"></div>
+    </div>
+
+    <!-- Add Measurement Sheet -->
+    <div id="${P}-meas-overlay" style="display:none;position:absolute;inset:0;z-index:200;background:rgba(0,0,0,0.55);border-radius:inherit;" onclick="W['${P}_closeAddMeasure']()"></div>
+    <div id="${P}-meas-sheet" style="position:absolute;bottom:0;left:0;right:0;z-index:201;background:var(--s2);border-radius:24px 24px 0 0;padding:0 20px 32px;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--b2);">
+      <div style="width:36px;height:4px;background:var(--b3);border-radius:2px;margin:12px auto 16px;"></div>
+      <div style="font-size:16px;font-weight:700;color:var(--w);margin-bottom:16px;">Yeni Ölçüm Ekle</div>
+      ${[['Kilo (kg)','82'],['Yağ oranı (%)','18'],['Göğüs (cm)','102'],['Bel (cm)','84'],['Kalça (cm)','96'],['Kol (cm)','36']].map(([lbl,ph])=>`
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;color:var(--g3);margin-bottom:5px;letter-spacing:0.5px;">${lbl.toUpperCase()}</div>
+          <input type="number" placeholder="${ph}" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--w);font-family:inherit;outline:none;" onclick="event.stopPropagation()"/>
+        </div>`).join('')}
+      <button class="pbtn" style="margin-top:8px;" onclick="W['${P}_saveMeasure']()">Kaydet</button>
+    </div>
+  </div>`;
+
+  // ─── TRAINER DIET ───────────────────────────────
+  root.innerHTML+=`<div class="view r" id="${P}-tdiet">
+    ${statusBar()}
+    <div class="tb">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div><div class="tb-t">Diyet Planları</div><div class="tb-s">8 aktif plan</div></div>
+        <div style="background:var(--w);color:var(--black);border-radius:10px;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;" onclick="W['${P}_toast']('Yeni plan oluşturuluyor...')">
+          <i class="ti ti-plus" style="font-size:13px;vertical-align:-1px;margin-right:3px;"></i>Yeni Plan
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0;padding:0 18px 12px;border-bottom:1px solid var(--b1);">
+      <div id="${P}-td-tab-ready" onclick="W['${P}_tdTab']('ready')" style="flex:1;text-align:center;padding:8px 0;font-size:12px;font-weight:700;color:var(--w);border-bottom:2px solid var(--w);cursor:pointer;">Hazır Şablonlar</div>
+      <div id="${P}-td-tab-custom" onclick="W['${P}_tdTab']('custom')" style="flex:1;text-align:center;padding:8px 0;font-size:12px;font-weight:600;color:var(--g3);border-bottom:2px solid transparent;cursor:pointer;">Kişiye Özel</div>
+    </div>
+    <div class="sc p" id="${P}-tdiet-body">
+      <!-- ready templates -->
+      <div id="${P}-td-ready">
+        ${[
+          {n:'Kilo Verme Planı',cal:1400,p:120,c:130,f:45,members:5,tag:'Düşük Kalori'},
+          {n:'Kas Kazanım Planı',cal:2800,p:210,c:320,f:80,members:8,tag:'Yüksek Protein'},
+          {n:'Sağlıklı Beslenme',cal:2000,p:150,c:230,f:65,members:12,tag:'Dengeli'},
+          {n:'Keto Diyet',cal:1800,p:140,c:30,f:130,members:3,tag:'Keto'},
+        ].map((d,di)=>`<div class="card" style="margin-bottom:9px;">
+          <div class="cp">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--w);">${d.n}</div>
+                <div style="font-size:11px;color:var(--g2);margin-top:2px;">${d.members} üyede aktif</div>
+              </div>
+              <span class="badge muted">${d.tag}</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;background:var(--s3);border-radius:10px;padding:9px;text-align:center;">
+                <div style="font-size:15px;font-weight:700;color:var(--w);">${d.cal}</div>
+                <div style="font-size:9px;color:var(--g3);margin-top:2px;">kcal</div>
+              </div>
+              <div style="flex:1;background:var(--s3);border-radius:10px;padding:9px;text-align:center;">
+                <div style="font-size:15px;font-weight:700;color:var(--w);">${d.p}g</div>
+                <div style="font-size:9px;color:var(--g3);margin-top:2px;">protein</div>
+              </div>
+              <div style="flex:1;background:var(--s3);border-radius:10px;padding:9px;text-align:center;">
+                <div style="font-size:15px;font-weight:700;color:var(--w);">${d.c}g</div>
+                <div style="font-size:9px;color:var(--g3);margin-top:2px;">karb</div>
+              </div>
+              <div style="flex:1;background:var(--s3);border-radius:10px;padding:9px;text-align:center;">
+                <div style="font-size:15px;font-weight:700;color:var(--w);">${d.f}g</div>
+                <div style="font-size:9px;color:var(--g3);margin-top:2px;">yağ</div>
+              </div>
+            </div>
+            <button style="width:100%;margin-top:10px;background:var(--w);border:none;border-radius:10px;padding:9px;font-size:12px;font-weight:700;color:var(--black);cursor:pointer;font-family:inherit;" onclick="W['${P}_openAssign'](${di})">Üyeye Ata</button>
+          </div>
+        </div>`).join('')}
+      </div>
+      <!-- custom plans -->
+      <div id="${P}-td-custom" style="display:none;">
+        ${[
+          {member:'Mehmet Çelik',init:'MC',plan:'Kilo Verme',cal:1600,updated:'bugün'},
+          {member:'Seda Yıldız',init:'SY',plan:'Kas Kazanım',cal:2600,updated:'dün'},
+          {member:'Kerem Arslan',init:'KA',plan:'Özel Program',cal:2200,updated:'3 gün önce'},
+        ].map(d=>`<div class="card" style="margin-bottom:9px;cursor:pointer;" onclick="W['${P}_toast']('${d.member} planı düzenleniyor')">
+          <div class="cp" style="display:flex;align-items:center;gap:12px;">
+            <div class="mav">${d.init}</div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:600;color:var(--w);">${d.member}</div>
+              <div style="font-size:11px;color:var(--g2);margin-top:2px;">${d.plan} • ${d.cal} kcal/gün</div>
+              <div style="font-size:10px;color:var(--g3);margin-top:2px;">Güncellendi: ${d.updated}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+              <span class="badge ok">Aktif</span>
+              <i class="ti ti-pencil" style="font-size:15px;color:var(--g3);"></i>
+            </div>
+          </div>
+        </div>`).join('')}
+        <div style="background:var(--s2);border:2px dashed var(--b2);border-radius:16px;padding:20px;text-align:center;cursor:pointer;margin-top:4px;" onclick="W['${P}_toast']('Yeni kişiye özel plan oluşturuluyor...')">
+          <i class="ti ti-plus" style="font-size:22px;color:var(--g3);"></i>
+          <div style="font-size:13px;font-weight:600;color:var(--g2);margin-top:8px;">Yeni Kişiye Özel Plan</div>
+        </div>
+      </div>
+      <div style="height:10px;"></div>
+    </div>
+    <div id="${P}-tdiet-nav"></div>
+    <!-- Assign Member Sheet -->
+    <div id="${P}-assign-overlay" style="display:none;position:absolute;inset:0;z-index:200;background:rgba(0,0,0,0.55);border-radius:inherit;" onclick="W['${P}_closeAssign']()"></div>
+    <div id="${P}-assign-sheet" style="position:absolute;bottom:0;left:0;right:0;z-index:201;background:var(--s2);border-radius:24px 24px 0 0;padding:0 0 28px;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--b2);">
+      <div style="width:36px;height:4px;background:var(--b3);border-radius:2px;margin:12px auto 0;"></div>
+      <div style="padding:16px 20px 10px;">
+        <div style="font-size:15px;font-weight:700;color:var(--w);">Üye Seç</div>
+        <div style="font-size:12px;color:var(--g2);margin-top:2px;" id="${P}-assign-plan-name"></div>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--s3);border:1px solid var(--b2);border-radius:10px;padding:9px 12px;margin-top:12px;">
+          <i class="ti ti-search" style="font-size:14px;color:var(--g3);flex-shrink:0;"></i>
+          <input id="${P}-assign-search" type="text" placeholder="Üye ara..." oninput="W['${P}_filterAssign'](this.value)" onclick="event.stopPropagation()" style="background:none;border:none;outline:none;font-size:13px;color:var(--w);font-family:inherit;width:100%;" />
+        </div>
+      </div>
+      <div style="max-height:280px;overflow-y:auto;" id="${P}-assign-member-list">
+        ${MEMBERS.map((m,mi)=>`<div data-mi="${mi}" data-name="${m.n.toLowerCase()}" onclick="W['${P}_confirmAssign'](${mi})" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--b1);transition:background .15s;" onmouseover="this.style.background='var(--s3)'" onmouseout="this.style.background='transparent'">
+          <div class="mav" style="width:36px;height:36px;font-size:12px;">${m.i}</div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--w);">${m.n}</div><div style="font-size:11px;color:var(--g2);">${m.diet!=='Atanmadı'?'Mevcut: '+m.diet:'Plan yok'}</div></div>
+          <span class="badge ${m.s==='Aktif'?'ok':'err'}">${m.s}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+
+  // ─── MEMBER DIET ───────────────────────────────
+  root.innerHTML+=`<div class="view r" id="${P}-mdiet">
+    ${statusBar()}
+    <div class="tb">
+      <div class="tb-t">Diyet Takibi</div>
+      <div style="display:flex;gap:0;margin-top:12px;">
+        <div id="${P}-md-tab-day" onclick="W['${P}_mdTab']('day')" style="flex:1;text-align:center;padding:8px 0;font-size:12px;font-weight:700;color:var(--w);border-bottom:2px solid var(--w);cursor:pointer;">Günlük</div>
+        <div id="${P}-md-tab-week" onclick="W['${P}_mdTab']('week')" style="flex:1;text-align:center;padding:8px 0;font-size:12px;font-weight:600;color:var(--g3);border-bottom:2px solid transparent;cursor:pointer;">Haftalık</div>
+      </div>
+    </div>
+    <div class="sc" id="${P}-mdiet-body">
+      <!-- DAILY -->
+      <div id="${P}-md-day" style="padding:16px 18px;">
+        <!-- Antrenör Planı -->
+        <div class="card" style="margin-bottom:14px;border-color:var(--b2);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="mav" style="width:30px;height:30px;font-size:11px;">AY</div>
+              <div>
+                <div style="font-size:10px;color:var(--g3);letter-spacing:0.5px;">ANTRENÖRÜNÜZÜN PLANI</div>
+                <div style="font-size:13px;font-weight:700;color:var(--w);" id="${P}-trainer-plan-name">Kas Kazanım Planı</div>
+              </div>
+            </div>
+            <span class="badge ok">Aktif</span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:8px;text-align:center;">
+              <div style="font-size:14px;font-weight:700;color:var(--w);" id="${P}-tp-cal">2.800</div>
+              <div style="font-size:9px;color:var(--g3);margin-top:2px;">kcal hedef</div>
+            </div>
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:8px;text-align:center;">
+              <div style="font-size:14px;font-weight:700;color:var(--w);" id="${P}-tp-p">210g</div>
+              <div style="font-size:9px;color:var(--g3);margin-top:2px;">protein</div>
+            </div>
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:8px;text-align:center;">
+              <div style="font-size:14px;font-weight:700;color:var(--w);" id="${P}-tp-c">320g</div>
+              <div style="font-size:9px;color:var(--g3);margin-top:2px;">karb</div>
+            </div>
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:8px;text-align:center;">
+              <div style="font-size:14px;font-weight:700;color:var(--w);" id="${P}-tp-f">80g</div>
+              <div style="font-size:9px;color:var(--g3);margin-top:2px;">yağ</div>
+            </div>
+          </div>
+        </div>
+        <!-- Su takibi -->
+        <div class="card cp" style="margin-bottom:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-droplet" style="font-size:18px;color:var(--g1);"></i>
+              <div style="font-size:14px;font-weight:700;color:var(--w);">Su Takibi</div>
+            </div>
+            <div style="font-size:11px;color:var(--g2);">Hedef: 2.5L</div>
+          </div>
+          <!-- bardaklar -->
+          <div style="display:flex;gap:6px;margin-bottom:14px;" id="${P}-glasses">
+            ${Array.from({length:10},(_,i)=>`<div class="wg" id="${P}-g${i}" onclick="W['${P}_drink'](${i})" style="flex:1;height:32px;border-radius:6px;background:${i<6?'var(--w)':'var(--s3)'};border:1px solid ${i<6?'transparent':'var(--b2)'};cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;">
+              <i class="ti ti-droplet${i<6?'':'-filled'}" style="font-size:13px;color:${i<6?'var(--black)':'var(--g3)'};"></i>
+            </div>`).join('')}
+          </div>
+          <!-- ml göstergesi -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div><span style="font-size:22px;font-weight:700;color:var(--w);" id="${P}-water-ml">1.500</span><span style="font-size:12px;color:var(--g2);margin-left:3px;">ml</span></div>
+            <div style="font-size:11px;color:var(--g2);">1.000 ml kaldı</div>
+          </div>
+          <!-- progress bar -->
+          <div style="height:4px;background:var(--s3);border-radius:4px;margin-bottom:14px;">
+            <div id="${P}-water-bar" style="height:4px;width:60%;background:var(--w);border-radius:4px;transition:width .3s;"></div>
+          </div>
+          <!-- hızlı ekle butonları -->
+          <div style="display:flex;gap:6px;margin-bottom:14px;">
+            ${[['+ 1 Bardak','250ml'],['+ Büyük','500ml'],['+ Şişe','750ml']].map((b,i)=>`<button onclick="W['${P}_addWater'](${[250,500,750][i]})" style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:9px;padding:8px 0;font-size:11px;font-weight:600;color:var(--g1);cursor:pointer;font-family:inherit;line-height:1.4;">${b[0]}<br><span style="font-size:9px;color:var(--g3);">${b[1]}</span></button>`).join('')}
+          </div>
+          <!-- hatırlatıcı -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s3);border-radius:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-bell" style="font-size:15px;color:var(--g2);"></i>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--g1);">Her 45 dk hatırlat</div>
+                <div style="font-size:10px;color:var(--g3);">Sonraki: 14:30</div>
+              </div>
+            </div>
+            <div id="${P}-water-notif" onclick="W['${P}_toggleNotif']()" style="width:36px;height:20px;border-radius:10px;background:var(--w);cursor:pointer;position:relative;transition:background .2s;">
+              <div id="${P}-notif-thumb" style="position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:var(--black);transition:transform .2s;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Kalori özet halkası -->
+        <div class="card cp" style="margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="position:relative;width:76px;height:76px;flex-shrink:0;">
+              <svg viewBox="0 0 76 76" width="76" height="76">
+                <circle cx="38" cy="38" r="30" fill="none" stroke="var(--s3)" stroke-width="6"/>
+                <circle cx="38" cy="38" r="30" fill="none" stroke="var(--w)" stroke-width="6"
+                  stroke-dasharray="${Math.round(2*Math.PI*30*0.68)} ${Math.round(2*Math.PI*30*0.32)}"
+                  stroke-dashoffset="${Math.round(2*Math.PI*30*0.25)}"
+                  stroke-linecap="round"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div style="font-size:14px;font-weight:700;color:var(--w);">68%</div>
+              </div>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--w);">1.088 / 1.600 kcal</div>
+              <div style="font-size:11px;color:var(--g2);margin-top:3px;">512 kcal kaldı</div>
+              <div style="display:flex;gap:10px;margin-top:10px;">
+                <div style="text-align:center;">
+                  <div style="font-size:11px;font-weight:700;color:var(--w);">82g</div>
+                  <div style="font-size:9px;color:var(--g3);">protein</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:11px;font-weight:700;color:var(--w);">110g</div>
+                  <div style="font-size:9px;color:var(--g3);">karb</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:11px;font-weight:700;color:var(--w);">38g</div>
+                  <div style="font-size:9px;color:var(--g3);">yağ</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- makro barlar -->
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;">
+            ${[['Protein','82g','120g',68,'var(--w)'],['Karbonhidrat','110g','130g',85,'var(--g2)'],['Yağ','38g','45g',84,'var(--g1)']].map(m=>`<div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:10px;color:var(--g2);">${m[0]}</span>
+                <span style="font-size:10px;color:var(--g2);">${m[1]} / ${m[2]}</span>
+              </div>
+              <div style="height:3px;background:var(--s3);border-radius:3px;">
+                <div style="height:3px;width:${m[3]}%;background:${m[4]};border-radius:3px;"></div>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <!-- Öğünler -->
+        ${[
+          {meal:'Kahvaltı',time:'08:00',kcal:380,items:['Yulaf ezmesi','Muz','Badem sütü'],done:true},
+          {meal:'Ara Öğün',time:'10:30',kcal:180,items:['Elma','Ceviz (30g)'],done:true},
+          {meal:'Öğle',time:'13:00',kcal:528,items:['Izgara tavuk','Bulgur pilavı','Salata'],done:true},
+          {meal:'Ara Öğün',time:'16:00',kcal:150,items:['Yoğurt','Çilek'],done:false},
+          {meal:'Akşam',time:'19:00',kcal:362,items:['Somon','Buharda sebze','Kinoa'],done:false},
+        ].map(m=>`<div class="card" style="margin-bottom:9px;">
+          <div class="cp">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:7px;height:7px;border-radius:50%;background:${m.done?'var(--green)':'var(--b3)'};flex-shrink:0;"></div>
+                <div style="font-size:14px;font-weight:700;color:${m.done?'var(--w)':'var(--g2)'};">${m.meal}</div>
+                <span style="font-size:10px;color:var(--g3);">${m.time}</span>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:${m.done?'var(--w)':'var(--g2)'};">${m.kcal} kcal</div>
+            </div>
+            <div style="font-size:11px;color:var(--g2);margin-bottom:${m.done?'0':'10px'};">${m.items.join(' · ')}</div>
+            ${!m.done?`<div style="display:flex;gap:7px;">
+              <button style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:9px;padding:8px;font-size:11px;font-weight:600;color:var(--g1);cursor:pointer;font-family:inherit;" onclick="W['${P}_aiPhoto']()">
+                <i class="ti ti-camera" style="font-size:13px;vertical-align:-1px;margin-right:3px;"></i>Fotoğraf Çek
+              </button>
+              <button style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:9px;padding:8px;font-size:11px;font-weight:600;color:var(--g1);cursor:pointer;font-family:inherit;" onclick="W['${P}_toast']('Öğün tamamlandı!')">
+                <i class="ti ti-check" style="font-size:13px;vertical-align:-1px;margin-right:3px;"></i>Tamamlandı
+              </button>
+            </div>`:''}
+          </div>
+        </div>`).join('')}
+        <!-- AI Analiz Sonucu (gizli) -->
+        <div id="${P}-ai-result" style="display:none;" class="card cp" >
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <i class="ti ti-sparkles" style="font-size:16px;color:var(--w);"></i>
+            <div style="font-size:13px;font-weight:700;color:var(--w);">Yapay Zeka Analizi</div>
+          </div>
+          <div style="font-size:12px;color:var(--g1);line-height:1.7;margin-bottom:12px;">Fotoğrafta <b style="color:var(--w);">makarna bolonez</b> tespit edildi. Tahmini besin değerleri:</div>
+          <div style="display:flex;gap:7px;margin-bottom:12px;">
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;">
+              <div style="font-size:15px;font-weight:700;color:var(--w);">480</div>
+              <div style="font-size:9px;color:var(--g3);">kcal</div>
+            </div>
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;">
+              <div style="font-size:15px;font-weight:700;color:var(--w);">22g</div>
+              <div style="font-size:9px;color:var(--g3);">protein</div>
+            </div>
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;">
+              <div style="font-size:15px;font-weight:700;color:var(--w);">58g</div>
+              <div style="font-size:9px;color:var(--g3);">karb</div>
+            </div>
+            <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;">
+              <div style="font-size:15px;font-weight:700;color:var(--w);">14g</div>
+              <div style="font-size:9px;color:var(--g3);">yağ</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--amber);margin-bottom:10px;"><i class="ti ti-alert-triangle" style="font-size:12px;vertical-align:-1px;"></i> Bu tahmini bir değerdir, porsiyon boyutuna göre değişebilir.</div>
+          <div style="display:flex;gap:7px;">
+            <button style="flex:1;background:var(--w);border:none;border-radius:9px;padding:9px;font-size:12px;font-weight:700;color:var(--black);cursor:pointer;font-family:inherit;" onclick="document.getElementById('${P}-ai-result').style.display='none';W['${P}_toast']('Öğüne eklendi!')">Öğüne Ekle</button>
+            <button style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:9px;padding:9px;font-size:12px;font-weight:600;color:var(--g1);cursor:pointer;font-family:inherit;" onclick="document.getElementById('${P}-ai-result').style.display='none'">İptal</button>
+          </div>
+        </div>
+        <div style="height:10px;"></div>
+      </div>
+      <!-- WEEKLY -->
+      <div id="${P}-md-week" style="display:none;padding:16px 18px;">
+        <div class="sl" style="margin-top:0;">HAFTALIK ÖZET</div>
+        <div class="sg" style="margin-bottom:14px;">
+          <div class="sk"><div class="sk-ic"><i class="ti ti-flame"></i></div><div class="sk-v">11.240</div><div class="sk-l">Toplam kcal</div><div class="sk-b" style="color:var(--green);">Hedef: 11.200</div></div>
+          <div class="sk"><div class="sk-ic"><i class="ti ti-check"></i></div><div class="sk-v">%87</div><div class="sk-l">Plan uyumu</div><div class="sk-b" style="color:var(--green);"><i class="ti ti-trending-up" style="font-size:10px;"></i> +5%</div></div>
+        </div>
+        <div class="sl">GÜNLÜK KALORİ</div>
+        <div class="card cp" style="margin-bottom:14px;">
+          ${[['Pzt',1580,1600],['Sal',1420,1600],['Çar',1650,1600],['Per',1600,1600],['Cum',1390,1600],['Cmt',1710,1600],['Paz',1088,1600]].map((d,i)=>{
+            const pct=Math.min(d[1]/d[2],1.1);
+            const over=d[1]>d[2];
+            const isToday=i===6;
+            return`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;">
+              <div style="font-size:11px;font-weight:600;color:${isToday?'var(--w)':'var(--g2)'};width:28px;">${d[0]}</div>
+              <div style="flex:1;height:6px;background:var(--s3);border-radius:4px;">
+                <div style="height:6px;width:${Math.min(pct*100,100)}%;background:${over?'var(--amber)':isToday?'var(--w)':'var(--g2)'};border-radius:4px;"></div>
+              </div>
+              <div style="font-size:11px;color:${isToday?'var(--w)':'var(--g2)'};min-width:36px;text-align:right;">${d[1]}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="sl">MAKRO DAĞILIMI</div>
+        <div class="card cp">
+          ${[['Protein','Ort. 98g / 120g','82%'],['Karbonhidrat','Ort. 118g / 130g','91%'],['Yağ','Ort. 41g / 45g','91%']].map(m=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1);">
+            <div style="font-size:13px;color:var(--g1);">${m[0]}</div>
+            <div style="font-size:11px;color:var(--g2);">${m[1]}</div>
+            <span class="badge ok">${m[2]}</span>
+          </div>`).join('')}
+        </div>
+        <div style="height:10px;"></div>
+      </div>
+    </div>
+    <div id="${P}-mdiet-nav"></div>
   </div>`;
 
   // DETAIL (shared)
@@ -817,8 +1669,44 @@ function build(rootId, isIOS){
       </div>
       <div class="sl">AÇIKLAMA</div>
       <div class="card cp" style="margin-bottom:16px;"><p id="${P}-di-d" style="font-size:13px;color:var(--g1);line-height:1.7;"></p></div>
-      <button class="pbtn" onclick="W['${P}_toast']('Rezervasyon oluşturuldu!')">Rezervasyon Yap</button>
+      <button class="pbtn" id="${P}-resv-btn" onclick="W['${P}_openResv']()">Rezervasyon Yap</button>
       <div style="height:14px;"></div>
+    </div>
+  </div>`;
+
+  // RESERVATION BOTTOM SHEET
+  root.innerHTML+=`
+  <div id="${P}-resv-overlay" style="display:none;position:absolute;inset:0;z-index:200;background:rgba(0,0,0,0.55);border-radius:inherit;" onclick="W['${P}_closeResv']()"></div>
+  <div id="${P}-resv-sheet" style="position:absolute;bottom:0;left:0;right:0;z-index:201;background:var(--s2);border-radius:24px 24px 0 0;padding:0 0 32px;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--b2);">
+    <div style="width:36px;height:4px;background:var(--b3);border-radius:2px;margin:12px auto 0;"></div>
+    <div id="${P}-resv-content">
+      <div style="padding:20px 20px 0;">
+        <div style="font-size:16px;font-weight:700;color:var(--w);" id="${P}-resv-title">Ders Adı</div>
+        <div style="font-size:12px;color:var(--g2);margin-top:3px;" id="${P}-resv-sub"></div>
+      </div>
+      <div style="padding:16px 20px 0;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:1px;color:var(--g3);margin-bottom:10px;">TARİH SEÇ</div>
+        <div style="display:flex;gap:8px;" id="${P}-resv-dates"></div>
+      </div>
+      <div style="padding:16px 20px 0;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:1px;color:var(--g3);margin-bottom:10px;">SAAT</div>
+        <div style="display:flex;gap:8px;" id="${P}-resv-times"></div>
+      </div>
+      <div style="padding:20px 20px 0;">
+        <div style="background:var(--s3);border:1px solid var(--b1);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;">
+          <i class="ti ti-users" style="font-size:16px;color:var(--g2);"></i>
+          <div><div style="font-size:12px;color:var(--g2);">Mevcut Kapasite</div><div style="font-size:14px;font-weight:600;color:var(--w);" id="${P}-resv-cap"></div></div>
+        </div>
+      </div>
+      <div style="padding:16px 20px 0;">
+        <button class="pbtn" onclick="W['${P}_confirmResv']()">Rezervasyonu Onayla</button>
+      </div>
+    </div>
+    <div id="${P}-resv-success" style="display:none;padding:28px 20px;text-align:center;">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(61,204,122,0.12);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><i class="ti ti-check" style="font-size:28px;color:var(--green);"></i></div>
+      <div style="font-size:17px;font-weight:700;color:var(--w);margin-bottom:6px;">Rezervasyon Oluşturuldu!</div>
+      <div style="font-size:13px;color:var(--g2);line-height:1.6;" id="${P}-resv-ok-msg"></div>
+      <button class="pbtn" style="margin-top:20px;" onclick="W['${P}_closeResv']()">Tamam</button>
     </div>
   </div>`;
 
@@ -827,22 +1715,52 @@ function build(rootId, isIOS){
   // ─── STATE & METHODS ───────────────────────────────
   let loginRole='admin', prev=null;
 
-  W[`${P}_selrole`]=function(r){
-    loginRole=r;
-    ['admin','trainer','member'].forEach(x=>{
-      document.getElementById(`${P}-rp-${x}`).className='rp'+(r===x?' sel':'');
-    });
-    setRole(r);
+  let isDark=true;
+  W[`${P}_toggleTheme`]=function(goLight){
+    isDark = goLight===undefined ? !isDark : !goLight;
+    const appRoot=document.getElementById(P);
+    // login toggle
+    const btnDark=document.getElementById(`${P}-btn-dark`);
+    const btnLight=document.getElementById(`${P}-btn-light`);
+    const sunIc=document.getElementById(`${P}-sun-ic`);
+    // settings toggle
+    const stDark=document.getElementById(`${P}-st-dark`);
+    const stLight=document.getElementById(`${P}-st-light`);
+    const stSunIc=document.getElementById(`${P}-st-sun-ic`);
+    const stThemeIc=document.getElementById(`${P}-settings-theme-ic`);
+    if(isDark){
+      appRoot.classList.remove('light');
+      if(btnDark){btnDark.style.background='#fff';btnDark.querySelector('i').style.color='#0A0A0A';}
+      if(btnLight){btnLight.style.background='transparent';}
+      if(sunIc){sunIc.style.color='var(--g3)';}
+      if(stDark){stDark.style.background='#fff';stDark.querySelector('i').style.color='#0A0A0A';}
+      if(stLight){stLight.style.background='transparent';}
+      if(stSunIc){stSunIc.style.color='var(--g3)';}
+      if(stThemeIc){stThemeIc.style.color='var(--g2)';}
+    } else {
+      appRoot.classList.add('light');
+      if(btnDark){btnDark.style.background='transparent';btnDark.querySelector('i').style.color='rgba(0,0,0,0.3)';}
+      if(btnLight){btnLight.style.background='rgba(0,0,0,0.08)';}
+      if(sunIc){sunIc.style.color='rgba(0,0,0,0.7)';}
+      if(stDark){stDark.style.background='transparent';stDark.querySelector('i').style.color='rgba(0,0,0,0.3)';}
+      if(stLight){stLight.style.background='rgba(0,0,0,0.08)';}
+      if(stSunIc){stSunIc.style.color='rgba(0,0,0,0.7)';}
+      if(stThemeIc){stThemeIc.style.color='rgba(0,0,0,0.6)';}
+    }
   };
 
-  W[`${P}_login`]=function(){
+  W[`${P}_selrole`]=function(r){
+    loginRole=r;
+    // sync outer role bar without triggering setRole recursion
+    document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));
+    const rb=document.getElementById('rb-'+r);
+    if(rb) rb.classList.add('on');
     const h=new Date().getHours();
     const g=h<12?'Günaydın':h<18?'İyi günler':'İyi akşamlar';
-    const el=document.getElementById(`${P}-greet`)||document.getElementById(`${P}-mgreet`);
-    if(el) el.textContent=g;
-    const firstTab=ROLES[loginRole].tabs[0].id;
-    injectAllNavs(loginRole);
-    W[`${P}_goto`](firstTab);
+    const greet=document.getElementById(`${P}-greet`)||document.getElementById(`${P}-mgreet`);
+    if(greet) greet.textContent=g;
+    injectAllNavs(r);
+    W[`${P}_goto`](ROLES[r].tabs[0].id);
   };
 
   W[`${P}_goto`]=function(id){
@@ -859,8 +1777,13 @@ function build(rootId, isIOS){
   W[`${P}_nav`]=function(id){prev=null;W[`${P}_goto`](id);};
   W[`${P}_back`]=function(){W[`${P}_goto`](prev||ROLES[loginRole].tabs[0].id);prev=null;};
 
+  let _resvLesson=null, _resvDate=0, _resvTime=0;
+  const RESV_DATES=[{d:'Bugün',dt:'14 Haz'},{d:'Yarın',dt:'15 Haz'},{d:'Pazar',dt:'16 Haz'}];
+  const RESV_TIMES=['08:00','10:00','12:00'];
+
   W[`${P}_det`]=function(l){
     if(typeof l==='string') l=JSON.parse(l);
+    _resvLesson=l;
     prev=loginRole==='member'?'classes':loginRole==='trainer'?'schedule':'dash';
     document.getElementById(`${P}-dt`).textContent=l.n;
     document.getElementById(`${P}-ds`).innerHTML=`<i class="ti ti-user" style="font-size:11px;"></i> ${l.tr}`;
@@ -869,7 +1792,247 @@ function build(rootId, isIOS){
     document.getElementById(`${P}-di-l`).textContent=l.loc;
     document.getElementById(`${P}-di-c`).textContent=`${l.cap}/${l.max}`;
     document.getElementById(`${P}-di-d`).textContent=l.desc;
+    const isAdmin=loginRole==='admin';
+    const btn=document.getElementById(`${P}-resv-btn`);
+    if(btn) btn.style.display=isAdmin?'none':'block';
     W[`${P}_goto`]('detail');
+  };
+
+  const DIET_PLANS=[
+    {n:'Kilo Verme Planı',cal:1400,p:120,c:130,f:45},
+    {n:'Kas Kazanım Planı',cal:2800,p:210,c:320,f:80},
+    {n:'Sağlıklı Beslenme',cal:2000,p:150,c:230,f:65},
+    {n:'Keto Diyet',cal:1800,p:140,c:30,f:130},
+  ];
+  let _assignPlanIdx=0;
+
+  W[`${P}_openAssign`]=function(planIdx){
+    _assignPlanIdx=planIdx;
+    const p=DIET_PLANS[planIdx];
+    document.getElementById(`${P}-assign-plan-name`).textContent=p.n+' — '+p.cal+' kcal/gün';
+    const si=document.getElementById(`${P}-assign-search`);
+    if(si){si.value='';W[`${P}_filterAssign`]('');}
+    document.getElementById(`${P}-assign-overlay`).style.display='block';
+    requestAnimationFrame(()=>document.getElementById(`${P}-assign-sheet`).style.transform='translateY(0)');
+  };
+
+  W[`${P}_filterAssign`]=function(q){
+    const rows=document.querySelectorAll(`#${P}-assign-member-list [data-mi]`);
+    const s=q.toLowerCase().trim();
+    rows.forEach(row=>{
+      const name=row.getAttribute('data-name').toLowerCase();
+      row.style.display=(!s||name.includes(s))?'flex':'none';
+    });
+  };
+
+  W[`${P}_closeAssign`]=function(){
+    document.getElementById(`${P}-assign-sheet`).style.transform='translateY(100%)';
+    setTimeout(()=>document.getElementById(`${P}-assign-overlay`).style.display='none',320);
+  };
+
+  W[`${P}_confirmAssign`]=function(memberIdx){
+    const p=DIET_PLANS[_assignPlanIdx]; const m=MEMBERS[memberIdx];
+    m.diet=p.n;
+    // update member-diet view to reflect the assigned plan
+    const pn=document.getElementById(`${P}-trainer-plan-name`);
+    const pc=document.getElementById(`${P}-tp-cal`);
+    const pp=document.getElementById(`${P}-tp-p`);
+    const pcarb=document.getElementById(`${P}-tp-c`);
+    const pf=document.getElementById(`${P}-tp-f`);
+    if(pn) pn.textContent=p.n;
+    if(pc) pc.textContent=p.cal.toLocaleString();
+    if(pp) pp.textContent=p.p+'g';
+    if(pcarb) pcarb.textContent=p.c+'g';
+    if(pf) pf.textContent=p.f+'g';
+    W[`${P}_closeAssign`]();
+    W[`${P}_toast`](`"${p.n}" planı ${m.n}'e atandı!`);
+  };
+
+  W[`${P}_backProgress`]=function(){
+    W[`${P}_goto`](loginRole==='trainer'?'member-detail':'mprofile');
+  };
+  W[`${P}_openProgress`]=function(){
+    const btn=document.getElementById(`${P}-add-meas-btn`);
+    if(btn) btn.style.display=loginRole==='trainer'?'none':'block';
+    W[`${P}_goto`]('progress');
+  };
+
+  let _chatMemberIdx=0;
+
+  W[`${P}_openChat`]=function(memberIdx){
+    _chatMemberIdx=memberIdx;
+    const m=MEMBERS[memberIdx];
+    const isTrainer=loginRole==='trainer';
+    document.getElementById(`${P}-chat-av`).textContent=isTrainer?m.i:'AY';
+    document.getElementById(`${P}-chat-name`).textContent=isTrainer?m.n:'Ahmet Yılmaz';
+    const msgs=CHAT_MSGS[memberIdx]||[];
+    const box=document.getElementById(`${P}-chat-messages`);
+    box.innerHTML=msgs.map(msg=>{
+      const isMine=(isTrainer&&msg.from==='trainer')||(!isTrainer&&msg.from==='member');
+      return`<div style="display:flex;justify-content:${isMine?'flex-end':'flex-start'};">
+        <div style="max-width:78%;background:${isMine?'var(--w)':'var(--s3)'};color:${isMine?'var(--black)':'var(--w)'};border-radius:${isMine?'16px 16px 4px 16px':'16px 16px 16px 4px'};padding:9px 13px;">
+          <div style="font-size:13px;line-height:1.5;">${msg.text}</div>
+          <div style="font-size:10px;opacity:0.5;margin-top:4px;text-align:right;">${msg.time}</div>
+        </div>
+      </div>`;
+    }).join('');
+    setTimeout(()=>{ box.scrollTop=box.scrollHeight; },50);
+    W[`${P}_goto`]('chat');
+  };
+
+  W[`${P}_openChatFromMember`]=function(){
+    // find the member index from the currently opened member detail
+    const name=document.getElementById(`${P}-md-name`).textContent;
+    const idx=MEMBERS.findIndex(m=>m.n===name);
+    W[`${P}_openChat`](idx>=0?idx:0);
+  };
+
+  W[`${P}_backChat`]=function(){
+    W[`${P}_goto`](loginRole==='trainer'?'member-detail':'mprofile');
+  };
+
+  W[`${P}_sendMsg`]=function(){
+    const input=document.getElementById(`${P}-chat-input`);
+    const text=input.value.trim();
+    if(!text) return;
+    const isTrainer=loginRole==='trainer';
+    const box=document.getElementById(`${P}-chat-messages`);
+    const now=new Date();
+    const time=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;justify-content:flex-end;';
+    div.innerHTML=`<div style="max-width:78%;background:var(--w);color:var(--black);border-radius:16px 16px 4px 16px;padding:9px 13px;">
+      <div style="font-size:13px;line-height:1.5;">${text}</div>
+      <div style="font-size:10px;opacity:0.5;margin-top:4px;text-align:right;">${time}</div>
+    </div>`;
+    box.appendChild(div);
+    box.scrollTop=box.scrollHeight;
+    input.value='';
+    // simulate reply after 1.2s
+    setTimeout(()=>{
+      const replies=isTrainer
+        ?['Tabii ki! Takip ediyorum.','Anlıyorum, yarın konuşalım.','Harika ilerliyorsun!','Tamam, programı güncelleyeceğim.']
+        :['Merhaba! Sana yardımcı olabilirim.','Tabii ki, merak etme.','Harika gidiyorsun, devam et!','Yarın seansta konuşuruz.'];
+      const reply=replies[Math.floor(Math.random()*replies.length)];
+      const rd=document.createElement('div');
+      rd.style.cssText='display:flex;justify-content:flex-start;';
+      rd.innerHTML=`<div style="max-width:78%;background:var(--s3);color:var(--w);border-radius:16px 16px 16px 4px;padding:9px 13px;">
+        <div style="font-size:13px;line-height:1.5;">${reply}</div>
+        <div style="font-size:10px;opacity:0.5;margin-top:4px;text-align:right;">${time}</div>
+      </div>`;
+      box.appendChild(rd);
+      box.scrollTop=box.scrollHeight;
+    },1200);
+  };
+
+  W[`${P}_openAddMeasure`]=function(){
+    document.getElementById(`${P}-meas-overlay`).style.display='block';
+    requestAnimationFrame(()=>{ document.getElementById(`${P}-meas-sheet`).style.transform='translateY(0)'; });
+  };
+  W[`${P}_closeAddMeasure`]=function(){
+    document.getElementById(`${P}-meas-sheet`).style.transform='translateY(100%)';
+    setTimeout(()=>{ document.getElementById(`${P}-meas-overlay`).style.display='none'; },320);
+  };
+  W[`${P}_saveMeasure`]=function(){
+    W[`${P}_closeAddMeasure`]();
+    W[`${P}_toast`]('Ölçüm kaydedildi!');
+  };
+
+  let _notifRead=NOTIFS.map(n=>n.read);
+
+  W[`${P}_backNotif`]=function(){
+    const home=loginRole==='member'?'home':loginRole==='trainer'?'schedule':'dash';
+    W[`${P}_goto`](home);
+  };
+
+  W[`${P}_readNotif`]=function(idx){
+    _notifRead[idx]=true;
+    const row=document.getElementById(`${P}-notif-${idx}`);
+    const dot=document.getElementById(`${P}-notif-dot-${idx}`);
+    if(row){row.style.background='transparent';row.style.borderColor='transparent';}
+    if(dot){dot.style.background='transparent';}
+  };
+
+  W[`${P}_markAllRead`]=function(){
+    _notifRead=_notifRead.map(()=>true);
+    NOTIFS.forEach((_,i)=>W[`${P}_readNotif`](i));
+  };
+
+  W[`${P}_openMember`]=function(idx){
+    const m=MEMBERS[idx];
+    document.getElementById(`${P}-md-av`).textContent=m.i;
+    document.getElementById(`${P}-md-name`).textContent=m.n;
+    document.getElementById(`${P}-md-pkg`).textContent=m.p+' Paket • Son: '+m.last;
+    document.getElementById(`${P}-md-badge`).innerHTML=`<span class="badge ${m.s==='Aktif'?'ok':'err'}">${m.s}</span>`;
+    document.getElementById(`${P}-md-streak`).textContent=m.streak||'—';
+    document.getElementById(`${P}-md-sessions`).textContent=m.sessions;
+    const pct=Math.round(m.attend.filter(Boolean).length/m.attend.length*100);
+    document.getElementById(`${P}-md-attend-pct`).textContent=pct+'%';
+    document.getElementById(`${P}-md-heatmap`).innerHTML=m.attend.map(a=>`<div style="width:18px;height:18px;border-radius:4px;background:${a?'var(--w)':'var(--s4)'};opacity:${a?0.9:1};"></div>`).join('');
+    document.getElementById(`${P}-md-goal`).textContent=m.goal;
+    document.getElementById(`${P}-md-diet`).textContent=m.diet;
+    const notesEl=document.getElementById(`${P}-md-notes`);
+    notesEl.textContent=m.notes||'Not eklenmemiş.';
+    notesEl.style.color=m.notes?'var(--g1)':'var(--g3)';
+    W[`${P}_goto`]('member-detail');
+  };
+
+  W[`${P}_openResv`]=function(){
+    if(!_resvLesson) return;
+    const l=_resvLesson;
+    _resvDate=0; _resvTime=0;
+    document.getElementById(`${P}-resv-title`).textContent=l.n;
+    document.getElementById(`${P}-resv-sub`).innerHTML=`<i class="ti ti-user" style="font-size:10px;"></i> ${l.tr} &nbsp;•&nbsp; ${l.loc}`;
+    document.getElementById(`${P}-resv-cap`).textContent=`${l.cap} / ${l.max} kişi`;
+    const dEl=document.getElementById(`${P}-resv-dates`);
+    dEl.innerHTML=RESV_DATES.map((d,i)=>`<div id="${P}-rd${i}" onclick="W['${P}_selResvDate'](${i})" style="flex:1;padding:10px 6px;border-radius:12px;border:1.5px solid ${i===0?'var(--w)':'var(--b2)'};background:${i===0?'var(--w)':'transparent'};text-align:center;cursor:pointer;transition:all .18s;">
+      <div style="font-size:11px;font-weight:600;color:${i===0?'var(--black)':'var(--g2)'};">${d.d}</div>
+      <div style="font-size:10px;color:${i===0?'var(--black)':'var(--g3)'};">${d.dt}</div>
+    </div>`).join('');
+    const tEl=document.getElementById(`${P}-resv-times`);
+    tEl.innerHTML=RESV_TIMES.map((t,i)=>`<div id="${P}-rt${i}" onclick="W['${P}_selResvTime'](${i})" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid ${i===0?'var(--w)':'var(--b2)'};background:${i===0?'var(--w)':'transparent'};text-align:center;cursor:pointer;transition:all .18s;">
+      <div style="font-size:13px;font-weight:600;color:${i===0?'var(--black)':'var(--g1)'};">${t}</div>
+    </div>`).join('');
+    document.getElementById(`${P}-resv-content`).style.display='block';
+    document.getElementById(`${P}-resv-success`).style.display='none';
+    document.getElementById(`${P}-resv-overlay`).style.display='block';
+    requestAnimationFrame(()=>{ document.getElementById(`${P}-resv-sheet`).style.transform='translateY(0)'; });
+  };
+
+  W[`${P}_selResvDate`]=function(idx){
+    _resvDate=idx;
+    RESV_DATES.forEach((_,i)=>{
+      const el=document.getElementById(`${P}-rd${i}`);
+      if(!el) return;
+      const on=i===idx;
+      el.style.borderColor=on?'var(--w)':'var(--b2)';
+      el.style.background=on?'var(--w)':'transparent';
+      el.querySelectorAll('div').forEach(d=>d.style.color=on?'var(--black)':(d===el.firstElementChild?'var(--g2)':'var(--g3))'));
+    });
+  };
+
+  W[`${P}_selResvTime`]=function(idx){
+    _resvTime=idx;
+    RESV_TIMES.forEach((_,i)=>{
+      const el=document.getElementById(`${P}-rt${i}`);
+      if(!el) return;
+      const on=i===idx;
+      el.style.borderColor=on?'var(--w)':'var(--b2)';
+      el.style.background=on?'var(--w)':'transparent';
+      el.querySelector('div').style.color=on?'var(--black)':'var(--g1)';
+    });
+  };
+
+  W[`${P}_confirmResv`]=function(){
+    const d=RESV_DATES[_resvDate]; const t=RESV_TIMES[_resvTime];
+    document.getElementById(`${P}-resv-ok-msg`).innerHTML=`<strong>${_resvLesson.n}</strong> dersi için<br>${d.d} (${d.dt}) saat ${t}<br>rezervasyonunuz onaylandı.`;
+    document.getElementById(`${P}-resv-content`).style.display='none';
+    document.getElementById(`${P}-resv-success`).style.display='block';
+  };
+
+  W[`${P}_closeResv`]=function(){
+    document.getElementById(`${P}-resv-sheet`).style.transform='translateY(100%)';
+    setTimeout(()=>{ document.getElementById(`${P}-resv-overlay`).style.display='none'; },320);
   };
 
   W[`${P}_toast`]=function(msg){
@@ -886,6 +2049,179 @@ function build(rootId, isIOS){
     });
   }
   W[`${P}_injectNavs`]=injectAllNavs;
+
+  let waterMl=1500, waterNotif=true;
+  const WATER_GOAL=2500;
+
+  W[`${P}_drink`]=function(idx){
+    const glasses=document.querySelectorAll(`#${P}-glasses .wg`);
+    const filled=Array.from(glasses).filter(g=>g.style.background.includes('var(--w)')||g.style.background==='var(--w)').length;
+    const clickedFilled=document.getElementById(`${P}-g${idx}`).style.background==='var(--w)';
+    const newCount=clickedFilled?idx:idx+1;
+    waterMl=newCount*250;
+    glasses.forEach((g,i)=>{
+      const on=i<newCount;
+      g.style.background=on?'var(--w)':'var(--s3)';
+      g.style.borderColor=on?'transparent':'var(--b2)';
+      g.querySelector('i').style.color=on?'var(--black)':'var(--g3)';
+    });
+    W[`${P}_updateWater`]();
+  };
+
+  W[`${P}_addWater`]=function(ml){
+    waterMl=Math.min(waterMl+ml, WATER_GOAL);
+    const glasses=Math.round(waterMl/250);
+    document.querySelectorAll(`#${P}-glasses .wg`).forEach((g,i)=>{
+      const on=i<glasses;
+      g.style.background=on?'var(--w)':'var(--s3)';
+      g.style.borderColor=on?'transparent':'var(--b2)';
+      g.querySelector('i').style.color=on?'var(--black)':'var(--g3)';
+    });
+    W[`${P}_updateWater`]();
+    if(waterMl>=WATER_GOAL) W[`${P}_toast`]('Günlük su hedefine ulaştın!');
+  };
+
+  W[`${P}_updateWater`]=function(){
+    const pct=Math.round(waterMl/WATER_GOAL*100);
+    const rem=WATER_GOAL-waterMl;
+    document.getElementById(`${P}-water-ml`).textContent=waterMl.toLocaleString('tr-TR');
+    document.getElementById(`${P}-water-bar`).style.width=pct+'%';
+  };
+
+  W[`${P}_toggleNotif`]=function(){
+    waterNotif=!waterNotif;
+    const tog=document.getElementById(`${P}-water-notif`);
+    const thumb=document.getElementById(`${P}-notif-thumb`);
+    if(waterNotif){
+      tog.style.background='var(--w)';
+      thumb.style.transform='translateX(0)';
+      thumb.style.background='var(--black)';
+      thumb.style.right='2px'; thumb.style.left='auto';
+    } else {
+      tog.style.background='var(--s4)';
+      thumb.style.right='auto'; thumb.style.left='2px';
+      thumb.style.background='var(--g2)';
+    }
+  };
+
+  // egzersiz state: none → active → done → none
+  const exState={};
+  W[`${P}_cycleEx`]=function(si,ei){
+    const key=`${si}-${ei}`;
+    const cur=exState[key]||'none';
+    const next=cur==='none'?'active':cur==='active'?'done':'none';
+    exState[key]=next;
+    W[`${P}_renderEx`](si,ei,next);
+    W[`${P}_updateProgBar`](si);
+    if(next==='active') W[`${P}_toast`]('Egzersiz başlatıldı!');
+  };
+
+  W[`${P}_finishEx`]=function(si,ei){
+    exState[`${si}-${ei}`]='done';
+    W[`${P}_renderEx`](si,ei,'done');
+    W[`${P}_updateProgBar`](si);
+    W[`${P}_toast`]('Tamamlandı!');
+  };
+
+  W[`${P}_renderEx`]=function(si,ei,state){
+    const row=document.getElementById(`${P}-ex-${si}-${ei}`);
+    if(!row) return;
+    const circle=row.querySelector('div');
+    const label=row.querySelectorAll('div')[1]?.querySelector('div');
+    const sub=row.querySelectorAll('div')[1]?.querySelectorAll('div')[1];
+    const btn=row.querySelector('button');
+    if(btn) btn.remove();
+    if(state==='done'){
+      circle.style.background='var(--w)'; circle.style.border='none';
+      circle.innerHTML=`<i class="ti ti-check" style="font-size:13px;color:var(--black);"></i>`;
+      if(label){label.style.color='var(--g3)';label.style.textDecoration='line-through';label.style.fontWeight='500';}
+    } else if(state==='active'){
+      circle.style.background='var(--s3)'; circle.style.border='2px solid var(--w)';
+      circle.innerHTML=`<i class="ti ti-player-play" style="font-size:11px;color:var(--w);"></i>`;
+      if(label){label.style.color='var(--w)';label.style.textDecoration='none';label.style.fontWeight='700';}
+      const btn2=document.createElement('button');
+      btn2.textContent='Bitirdim';
+      btn2.style.cssText='background:var(--w);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--black);cursor:pointer;font-family:inherit;flex-shrink:0;';
+      btn2.onclick=(e)=>{e.stopPropagation();W[`${P}_finishEx`](si,ei);};
+      row.appendChild(btn2);
+    } else {
+      circle.style.background='var(--s3)'; circle.style.border='1px solid var(--b2)';
+      circle.innerHTML='';
+      if(label){label.style.color='var(--g1)';label.style.textDecoration='none';label.style.fontWeight='500';}
+    }
+  };
+
+  W[`${P}_updateProgBar`]=function(si){
+    const keys=Object.keys(exState).filter(k=>k.startsWith(`${si}-`));
+    const done=keys.filter(k=>exState[k]==='done').length;
+    const total=si===0?6:4;
+    const pct=Math.round(done/total*100);
+    const bar=document.getElementById(`${P}-prog-bar-${si}`);
+    const txt=document.getElementById(`${P}-prog-txt-${si}`);
+    if(bar) bar.style.width=pct+'%';
+    if(txt) txt.textContent=`${done}/${total}`;
+    if(done===total) W[`${P}_toast`]('Antrenman tamamlandı! 💪');
+  };
+
+  W[`${P}_clTab`]=function(tab){
+    const isGroup=tab==='group';
+    document.getElementById(`${P}-cl-tab-group`).style.color=isGroup?'var(--w)':'var(--g3)';
+    document.getElementById(`${P}-cl-tab-group`).style.borderBottomColor=isGroup?'var(--w)':'transparent';
+    document.getElementById(`${P}-cl-tab-solo`).style.color=!isGroup?'var(--w)':'var(--g3)';
+    document.getElementById(`${P}-cl-tab-solo`).style.borderBottomColor=!isGroup?'var(--w)':'transparent';
+    document.getElementById(`${P}-cl-group`).style.display=isGroup?'flex':'none';
+    document.getElementById(`${P}-cl-group`).style.flexDirection=isGroup?'column':'';
+    document.getElementById(`${P}-cl-solo`).style.display=!isGroup?'flex':'none';
+  };
+
+  W[`${P}_tdTab`]=function(tab){
+    const isReady=tab==='ready';
+    document.getElementById(`${P}-td-tab-ready`).style.color=isReady?'var(--w)':'var(--g3)';
+    document.getElementById(`${P}-td-tab-ready`).style.borderBottomColor=isReady?'var(--w)':'transparent';
+    document.getElementById(`${P}-td-tab-custom`).style.color=!isReady?'var(--w)':'var(--g3)';
+    document.getElementById(`${P}-td-tab-custom`).style.borderBottomColor=!isReady?'var(--w)':'transparent';
+    document.getElementById(`${P}-td-ready`).style.display=isReady?'block':'none';
+    document.getElementById(`${P}-td-custom`).style.display=!isReady?'block':'none';
+  };
+
+  W[`${P}_mdTab`]=function(tab){
+    const isDay=tab==='day';
+    document.getElementById(`${P}-md-tab-day`).style.color=isDay?'var(--w)':'var(--g3)';
+    document.getElementById(`${P}-md-tab-day`).style.borderBottomColor=isDay?'var(--w)':'transparent';
+    document.getElementById(`${P}-md-tab-week`).style.color=!isDay?'var(--w)':'var(--g3)';
+    document.getElementById(`${P}-md-tab-week`).style.borderBottomColor=!isDay?'var(--w)':'transparent';
+    document.getElementById(`${P}-md-day`).style.display=isDay?'block':'none';
+    document.getElementById(`${P}-md-week`).style.display=!isDay?'block':'none';
+  };
+
+  W[`${P}_aiPhoto`]=function(){
+    const result=document.getElementById(`${P}-ai-result`);
+    result.style.display='block';
+    result.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:16px;">
+      <i class="ti ti-loader-2" style="font-size:20px;color:var(--g2);animation:spin 1s linear infinite;"></i>
+      <div style="font-size:13px;color:var(--g2);">Yapay zeka analiz ediyor...</div>
+    </div>`;
+    setTimeout(()=>{
+      result.innerHTML=`<div class="cp">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <i class="ti ti-sparkles" style="font-size:16px;color:var(--w);"></i>
+          <div style="font-size:13px;font-weight:700;color:var(--w);">Yapay Zeka Analizi</div>
+        </div>
+        <div style="font-size:12px;color:var(--g1);line-height:1.7;margin-bottom:12px;">Fotoğrafta <b style="color:var(--w);">makarna bolonez</b> tespit edildi. Tahmini besin değerleri:</div>
+        <div style="display:flex;gap:7px;margin-bottom:12px;">
+          <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;"><div style="font-size:15px;font-weight:700;color:var(--w);">480</div><div style="font-size:9px;color:var(--g3);">kcal</div></div>
+          <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;"><div style="font-size:15px;font-weight:700;color:var(--w);">22g</div><div style="font-size:9px;color:var(--g3);">protein</div></div>
+          <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;"><div style="font-size:15px;font-weight:700;color:var(--w);">58g</div><div style="font-size:9px;color:var(--g3);">karb</div></div>
+          <div style="flex:1;background:var(--s3);border-radius:9px;padding:9px;text-align:center;"><div style="font-size:15px;font-weight:700;color:var(--w);">14g</div><div style="font-size:9px;color:var(--g3);">yağ</div></div>
+        </div>
+        <div style="font-size:11px;color:var(--amber);margin-bottom:10px;"><i class="ti ti-alert-triangle" style="font-size:12px;vertical-align:-1px;"></i> Tahmini değerdir, porsiyon boyutuna göre değişebilir.</div>
+        <div style="display:flex;gap:7px;">
+          <button style="flex:1;background:var(--w);border:none;border-radius:9px;padding:9px;font-size:12px;font-weight:700;color:var(--black);cursor:pointer;font-family:inherit;" onclick="document.getElementById('${P}-ai-result').style.display='none';W['${P}_toast']('Öğüne eklendi!')">Öğüne Ekle</button>
+          <button style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:9px;padding:9px;font-size:12px;font-weight:600;color:var(--g1);cursor:pointer;font-family:inherit;" onclick="document.getElementById('${P}-ai-result').style.display='none'">İptal</button>
+        </div>
+      </div>`;
+    },2000);
+  };
 }
 
 function selDate(el){
