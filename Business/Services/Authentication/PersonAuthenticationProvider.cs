@@ -51,14 +51,14 @@ namespace Business.Services.Authentication
             };
         }
 
-        public override async Task<DArchToken> CreateToken(VerifyOtpCommand command)
+        public override async Task<FabrikaToken> CreateToken(VerifyOtpCommand command)
         {
             var citizenId = long.Parse(command.ExternalUserId);
             var user = await _users.GetAsync(u => u.CitizenId == citizenId);
             user.AuthenticationProviderType = ProviderType.ToString();
 
             var claims = _users.GetClaims(user.UserId);
-            var accessToken = _tokenHelper.CreateToken<DArchToken>(user);
+            var accessToken = _tokenHelper.CreateToken<FabrikaToken>(user);
             accessToken.Provider = ProviderType;
             return accessToken;
         }

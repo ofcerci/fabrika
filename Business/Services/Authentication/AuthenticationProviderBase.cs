@@ -23,7 +23,7 @@ namespace Business.Services.Authentication
             _smsService = smsService;
         }
 
-        public virtual async Task<IDataResult<DArchToken>> Verify(VerifyOtpCommand command)
+        public virtual async Task<IDataResult<FabrikaToken>> Verify(VerifyOtpCommand command)
         {
             var externalUserId = command.ExternalUserId;
             var date = DateTime.Now;
@@ -33,7 +33,7 @@ namespace Business.Services.Authentication
 
             if (login == null)
             {
-                return new ErrorDataResult<DArchToken>(Messages.InvalidCode);
+                return new ErrorDataResult<FabrikaToken>(Messages.InvalidCode);
             }
 
             var accessToken = await CreateToken(command);
@@ -49,12 +49,12 @@ namespace Business.Services.Authentication
             await _logins.SaveChangesAsync();
 
 
-            return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin);
+            return new SuccessDataResult<FabrikaToken>(accessToken, Messages.SuccessfulLogin);
         }
 
         public abstract Task<LoginUserResult> Login(LoginUserCommand command);
 
-        public abstract Task<DArchToken> CreateToken(VerifyOtpCommand command);
+        public abstract Task<FabrikaToken> CreateToken(VerifyOtpCommand command);
 
         protected virtual async Task<LoginUserResult> PrepareOneTimePassword(AuthenticationProviderType providerType, string cellPhone, string externalUserId)
         {

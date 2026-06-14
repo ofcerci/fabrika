@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                base.OnConfiguring(optionsBuilder.UseOracle(Configuration.GetConnectionString("DArchOracleContext")));
+                base.OnConfiguring(optionsBuilder.UseOracle(Configuration.GetConnectionString("FabrikaOracleContext")));
             }
         }
     }

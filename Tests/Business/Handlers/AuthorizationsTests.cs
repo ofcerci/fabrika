@@ -65,7 +65,7 @@ namespace Tests.Business.Handlers
                 .Returns(() => Task.FromResult(user));
 
 
-            _tokenHelper.Setup(x => x.CreateToken<DArchToken>(It.IsAny<User>())).Returns(new DArchToken()
+            _tokenHelper.Setup(x => x.CreateToken<FabrikaToken>(It.IsAny<User>())).Returns(new FabrikaToken()
             {
                 Token = "TestToken",
                 Claims = new List<string>(),

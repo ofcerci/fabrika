@@ -25,9 +25,9 @@ type LoginResponse = {
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
-  private readonly tokenKey = "devarch.token";
-  private readonly claimsKey = "devarch.claims";
-  private readonly langKey = "devarch.lang";
+  private readonly tokenKey = "fabrika.token";
+  private readonly claimsKey = "fabrika.claims";
+  private readonly langKey = "fabrika.lang";
   readonly isAuthenticated = signal<boolean>(this.hasToken());
 
   constructor(private readonly http: HttpClient) {}

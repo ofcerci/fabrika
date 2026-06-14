@@ -72,7 +72,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             if (!optionsBuilder.IsConfigured)
             {
-                base.OnConfiguring(optionsBuilder.UseNpgsql(Configuration.GetConnectionString("DArchPgContext"))
+                base.OnConfiguring(optionsBuilder.UseNpgsql(Configuration.GetConnectionString("FabrikaPgContext"))
                     .EnableSensitiveDataLogging());
             }
         }

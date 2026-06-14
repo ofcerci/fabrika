@@ -7,7 +7,7 @@ namespace Business.Services.Authentication.Model
     /// <summary>
     /// It is the command sent to the user for One Time Password control.
     /// </summary>
-    public class VerifyOtpCommand : IRequest<IDataResult<DArchToken>>
+    public class VerifyOtpCommand : IRequest<IDataResult<FabrikaToken>>
     {
         public AuthenticationProviderType Provider { get; set; }
 

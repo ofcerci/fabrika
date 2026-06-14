@@ -12,7 +12,7 @@ namespace Business.Services.Authentication
             throw new NotImplementedException();
         }
 
-        public virtual Task<IDataResult<DArchToken>> Verify(VerifyOtpCommand command)
+        public virtual Task<IDataResult<FabrikaToken>> Verify(VerifyOtpCommand command)
         {
             throw new NotImplementedException();
         }

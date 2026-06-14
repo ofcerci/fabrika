@@ -52,7 +52,7 @@ namespace Business.Handlers.Authorizations.Queries
 
                 var claims = _userRepository.GetClaims(user.UserId);
 
-                var accessToken = _tokenHelper.CreateToken<DArchToken>(user);
+                var accessToken = _tokenHelper.CreateToken<FabrikaToken>(user);
                 accessToken.Claims = claims.Select(x => x.Name).ToList();
 
                 user.RefreshToken = accessToken.RefreshToken;

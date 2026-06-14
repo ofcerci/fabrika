@@ -3,7 +3,7 @@ using Core.Utilities.Security.Jwt;
 
 namespace Business.Services.Authentication
 {
-    public class DArchToken : AccessToken
+    public class FabrikaToken : AccessToken
     {
         public string ExternalUserId { get; set; }
         public AuthenticationProviderType Provider { get; set; }

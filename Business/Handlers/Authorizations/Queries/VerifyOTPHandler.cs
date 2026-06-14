@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Business.Handlers.Authorizations.Queries
 {
-    public class VerifyOtpHandler : IRequestHandler<VerifyOtpCommand, IDataResult<DArchToken>>
+    public class VerifyOtpHandler : IRequestHandler<VerifyOtpCommand, IDataResult<FabrikaToken>>
     {
         private readonly IAuthenticationCoordinator _coordinator;
 
@@ -25,7 +25,7 @@ namespace Business.Handlers.Authorizations.Queries
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [LogAspect(typeof(FileLogger))]
-        public async Task<IDataResult<DArchToken>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
+        public async Task<IDataResult<FabrikaToken>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
         {
             var provider = _coordinator.SelectProvider(request.Provider);
             return await provider.Verify(request);

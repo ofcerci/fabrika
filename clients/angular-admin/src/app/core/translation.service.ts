@@ -15,7 +15,7 @@ type TranslationItem = {
 
 @Injectable({ providedIn: "root" })
 export class TranslationService {
-  private readonly langKey = "devarch.lang";
+  private readonly langKey = "fabrika.lang";
   readonly currentLang = signal<string>(normalizeUiLanguage(localStorage.getItem(this.langKey)));
   readonly dictionary = signal<Record<string, string>>({});
 

@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                base.OnConfiguring(optionsBuilder.UseMySQL(Configuration.GetConnectionString("DArchMySqlContext")));
+                base.OnConfiguring(optionsBuilder.UseMySQL(Configuration.GetConnectionString("FabrikaMySqlContext")));
             }
         }
     }

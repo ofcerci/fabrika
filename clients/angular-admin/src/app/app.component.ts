@@ -58,13 +58,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.darkMode = localStorage.getItem("devarch.darkMode") === "true";
+    this.darkMode = localStorage.getItem("fabrika.darkMode") === "true";
     document.documentElement.classList.toggle("app-dark", this.darkMode);
   }
 
   toggleDark(): void {
     this.darkMode = !this.darkMode;
-    localStorage.setItem("devarch.darkMode", String(this.darkMode));
+    localStorage.setItem("fabrika.darkMode", String(this.darkMode));
     document.documentElement.classList.toggle("app-dark", this.darkMode);
   }
 

@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Business.Fakes.DArch
+namespace Business.Fakes.Fabrika
 {
-    public sealed class DArchInMemory : ProjectDbContext
+    public sealed class FabrikaInMemory : ProjectDbContext
     {
         private static readonly InMemoryDatabaseRoot SharedDatabaseRoot = new();
 
-        public DArchInMemory(DbContextOptions<DArchInMemory> options, IConfiguration configuration)
+        public FabrikaInMemory(DbContextOptions<FabrikaInMemory> options, IConfiguration configuration)
             : base(options, configuration)
         {
         }
@@ -20,7 +20,7 @@ namespace Business.Fakes.DArch
             {
                 base.OnConfiguring(
                     optionsBuilder.UseInMemoryDatabase(
-                        Configuration.GetConnectionString("DArchInMemory"),
+                        Configuration.GetConnectionString("FabrikaInMemory"),
                         SharedDatabaseRoot));
             }
         }

@@ -1,7 +1,7 @@
 using Autofac;
 using Business.Constants;
 using Business.DependencyResolvers;
-using Business.Fakes.DArch;
+using Business.Fakes.Fabrika;
 using Business.Services.Authentication;
 using Core.DependencyResolvers;
 using Core.Extensions;
@@ -180,7 +180,7 @@ namespace Business
             services.AddTransient<IAttendanceRepository, AttendanceRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
 
-            services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
+            services.AddDbContext<ProjectDbContext, FabrikaInMemory>(ServiceLifetime.Transient);
             services.AddSingleton<MongoDbContextBase, MongoDbContext>();
         }
 

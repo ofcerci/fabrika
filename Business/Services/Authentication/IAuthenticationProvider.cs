@@ -7,6 +7,6 @@ namespace Business.Services.Authentication
     public interface IAuthenticationProvider
     {
         Task<LoginUserResult> Login(LoginUserCommand command);
-        Task<IDataResult<DArchToken>> Verify(VerifyOtpCommand command);
+        Task<IDataResult<FabrikaToken>> Verify(VerifyOtpCommand command);
     }
 }
